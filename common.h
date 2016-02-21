@@ -23,24 +23,20 @@ struct prisoner_t {
     }
 };
 
+std::ostream& operator << (std::ostream& out, prisoner_t p) {
+    out << p.name;
+    return out;
+}
 
-// score for player that made d1
-// TODO
-// make this 4 if statements, this is ugly
 int score(decision d1, decision d2) {
-    if (d1 == decision::defect) {
-        if (d2 == decision::defect)
-            return 1;
-        else
-            return 5;
-    }
-
-    else {
-        if (d2 == decision::defect)
-            return 0;
-        else
-            return 3;
-    }
+    if (d1 == decision::cooperate && d2 == decision::cooperate)
+        return 3;
+    if (d1 == decision::cooperate && d2 == decision::defect)
+        return 0;
+    if (d1 == decision::defect && d2 == decision::cooperate)
+        return 5;
+    if (d1 == decision::defect && d2 == decision::defect)
+        return 1;
     return 0;
 }
 

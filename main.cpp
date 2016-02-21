@@ -13,11 +13,9 @@ std::ostream& operator << (std::ostream& out, std::pair<T, U> p) {
 }
 
 int main() {
-    prisoner_t allc = {"all cooperate", bots::all_coop};
-    prisoner_t alld = {"all defect", bots::all_defect};
+    auto sb = play_tourny(bots::all, 100);
 
-    auto score = play(allc, alld, 7);
-
-    std::cout << score << std::endl;
+    for (auto i: sb)
+        std::cout << i << std::endl;
     return 0;
 }

@@ -5,9 +5,6 @@
 
 #include "common.h"
 
-// TODO
-// bring over all other bots from IPD.hs
-
 namespace bots {
 
 decision all_coop(history_t _) {

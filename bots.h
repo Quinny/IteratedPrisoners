@@ -18,9 +18,15 @@ decision all_defect(history_t _) {
     return decision::defect;
 }
 
+decision tft(history_t h) {
+    if (h.empty()) return decision::cooperate;
+    return h.front();
+}
+
 const std::vector<prisoner_t> all = {
     {"All cooperate", all_coop},
-    {"All defect",    all_defect}
+    {"All defect",    all_defect},
+    {"Tit for tat",   tft}
 };
 
 }

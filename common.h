@@ -53,8 +53,8 @@ int play(prisoner_t p1, prisoner_t p2, int n) {
         auto d2 = p2(p1_hist);
         p1_score += score(d1, d2);
 
-        p1_hist.push_back(d1);
-        p2_hist.push_back(d2);
+        p1_hist.push_front(d1);
+        p2_hist.push_front(d2);
     }
     return p1_score;
 }

@@ -37,12 +37,11 @@ struct genetic_strategy {
     genetic_strategy(const std::string& genome) :
         strategy(genome.size()), mem_size(genome.size())
     {
-        for (std::size_t i = 0; i != mem_size; ++i) {
-            if (genome[i] == 'c')
-                strategy[i] = decision::cooperate;
-            else
-                strategy[i] = decision::defect;
-        }
+        auto f = [] (char c) {
+            if (c == 'c') return decision::cooperate;
+            return decision::defect;
+        };
+        std::transform(genome.begin(), genome.end(), strategy.begin(), f);
     }
 
     // Encodes the history of both players into an integer in the form of

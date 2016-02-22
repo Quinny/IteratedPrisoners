@@ -6,14 +6,17 @@
 #include <functional>
 #include <vector>
 
+// A bot can decide to cooperate or defect
 enum class decision {
     cooperate,
     defect
 };
 
+// Types used for representing move history, and strategy functions
 using history_t  = std::list<decision>;
 using strategy_t = std::function<decision(history_t)>;
 
+// A prisoner has a name and a strategy
 struct prisoner_t {
     std::string name;
     strategy_t strategy;
@@ -28,6 +31,10 @@ std::ostream& operator << (std::ostream& out, prisoner_t p) {
     return out;
 }
 
+// Modified prisoners dilemma score function.  Re arranged so that
+// a higher score => less time spent in jail.  This function will return the
+// score obtained by the bot who made decision d1.  To get d2's score, the
+// arguments should be reversed
 int score(decision d1, decision d2) {
     if (d1 == decision::cooperate && d2 == decision::cooperate)
         return 3;
@@ -40,6 +47,10 @@ int score(decision d1, decision d2) {
     return 0;
 }
 
+// Play one prisoner against another for n rounds,
+// and record prisoner p1's score.  To get p2's score, the arguments
+// should be reversed.  Doing it this way makes it so that each
+// prisoner gets the opportunity to go first, thus removing bias
 int play(prisoner_t p1, prisoner_t p2, int n) {
     history_t p1_hist, p2_hist;
     int p1_score = 0;
@@ -55,7 +66,8 @@ int play(prisoner_t p1, prisoner_t p2, int n) {
     return p1_score;
 }
 
-// This could be used as a fitness function
+// Play prisoner p against all others for n rounds and return
+// the total score obtained
 int total_score(prisoner_t p, std::vector<prisoner_t> ps, int n) {
     int score = 0;
     for (auto i: ps)

@@ -5,6 +5,8 @@
 
 #include "common.h"
 
+// All default stateless bots
+
 namespace bots {
 
 decision all_coop(history_t _) {
@@ -64,6 +66,7 @@ decision hesitant(history_t h) {
     return decision::defect;
 }
 
+// Vector of bots converted to prisoners
 const std::vector<prisoner_t> all = {
     {"All cooperate",     all_coop},
     {"All defect",        all_defect},

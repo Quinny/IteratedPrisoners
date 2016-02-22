@@ -2,9 +2,11 @@
 #include <functional>
 #include <iostream>
 #include <list>
+#include <iterator>
 
 #include "common.h"
 #include "bots.h"
+#include "genetic.h"
 
 template <typename T, typename U>
 std::ostream& operator << (std::ostream& out, std::pair<T, U> p) {
@@ -13,9 +15,16 @@ std::ostream& operator << (std::ostream& out, std::pair<T, U> p) {
 }
 
 int main() {
-    auto sb = play_tourny(bots::all, 100);
+    using score_t = std::pair<prisoner_t, int>;
+    auto gen_guy = make_prisoner_t(genetic_strategy(4));
+    auto cp      = bots::all;
+    cp.push_back(gen_guy);
 
-    for (auto i: sb)
-        std::cout << i << std::endl;
+    auto sb = play_tourny(cp, 100);
+    std::copy(
+        sb.begin(),
+        sb.end(),
+        std::ostream_iterator<score_t>(std::cout, "\n")
+    );
     return 0;
 }

@@ -12,27 +12,25 @@
 // - actual genetic part
 // - maybe use total_score from common as fitness
 
+decision random_decision() {
+    static std::uniform_int_distribution<int> dist(0, 1);
+    static std::knuth_b gen (std::time(nullptr));
+    static auto roll = std::bind(dist, gen);
+
+    if (roll())
+        return decision::cooperate;
+    return decision::defect;
+}
+
 struct genetic_strategy {
     history_t history;
-    // len == 4 ^ memsize
     std::vector<decision> strategy;
     std::size_t mem_size;
 
     // Assigns a random strategy
-    genetic_strategy(const int n) :
-        strategy(std::pow(4, n)), mem_size(n)
-    {
-        std::uniform_int_distribution<int> dist(0, 1);
-        std::knuth_b gen;
-        gen.seed(time(NULL));
-        auto roll = std::bind(dist, gen);
-
-        for (std::size_t i = 0; i != mem_size; ++i) {
-            if (roll())
-                strategy[i] = decision::cooperate;
-            else
-                strategy[i] = decision::defect;
-        }
+    genetic_strategy(const std::size_t n) :
+        strategy(std::pow(4, n)), mem_size(n) {
+        std::generate(strategy.begin(), strategy.end(), random_decision);
     }
 
     // Construct a strategy given a genome string
@@ -62,17 +60,18 @@ struct genetic_strategy {
         auto my_iter = history.begin();
         auto op_iter = op_history.begin();
 
-        for (
-            int shift = 2 * history.size() - 1;
-            my_iter != history.end() && op_iter != op_history.end();
-            ++my_iter, ++op_iter, shift -= 2
-        ) {
-            if (*my_iter == decision::defect)
-                code |= 1 << shift;
-            if (*op_iter == decision::cooperate)
-                code |= 1 << (shift - 1);
-        }
+        for (auto shift = 0UL; shift < 2 * mem_size; shift += 2) {
+            if (my_iter == history.end() || op_iter == op_history.end())
+                break;
 
+            if (*my_iter == decision::cooperate)
+                code |= 1 << shift;
+
+            if (*op_iter == decision::cooperate)
+                code |= 1 << (shift + 1);
+
+            ++my_iter; ++op_iter;
+        }
         return code;
     }
 

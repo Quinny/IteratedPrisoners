@@ -45,15 +45,12 @@ struct genetic_strategy {
         std::transform(genome.begin(), genome.end(), strategy.begin(), f);
     }
 
-    // Encodes the history of both players into an integer in the form of
-    // (my last move) (op's last move) ... (my oldest move) (op's oldest move)
-    // Coop = 0 bit
-    // Defect = 1 bit
-
-    /*
-     * op_history must be the same size as history or the encoding will not
-     * work, play function must keep track of all moves to avoid conflicts
-     */
+    // Encodes the moves of this player and the opponent player into
+    // an integer which represents the strategy index
+    //
+    // Moves are encoded such that a cooperate results in a 1 bit,
+    // and a defect results in a 0.  The bits are aligned so that
+    // the LEAST significant bit represents the latest move.
     std::size_t encode(const history_t& op_history) const {
         std::size_t code = 0;
 

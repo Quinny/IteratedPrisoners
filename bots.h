@@ -9,26 +9,32 @@
 
 namespace bots {
 
+// Always cooperate
 decision all_coop(history_t _) {
     (void)_;
     return decision::cooperate;
 }
 
+// Always defect
 decision all_defect(history_t _) {
     (void)_;
     return decision::defect;
 }
 
+// Start by cooperating, and then mirror opponents last move
 decision tft(history_t h) {
     if (h.empty()) return decision::cooperate;
     return h.front();
 }
 
+// Start by defecting and then mirror opponents last move
 decision sus_tft(history_t h) {
     if (h.empty()) return decision::defect;
     return h.front();
 }
 
+// Start by cooperating, and then only defect if the opponent has defected
+// twice in a row
 decision tf2t(history_t h) {
     if (h.size() < 2)
         return decision::cooperate;
@@ -37,6 +43,8 @@ decision tf2t(history_t h) {
     return decision::cooperate;
 }
 
+// Start by defecting, and then only defect if the opponent has defected
+// twice in a row
 decision sus_tf2t(history_t h) {
     if (h.size() < 2)
         return decision::defect;
@@ -45,18 +53,23 @@ decision sus_tf2t(history_t h) {
     return decision::cooperate;
 }
 
+// Cooperate until the opponent defects, then continually
+// defect
 decision grudger(history_t h) {
     if (std::find(h.begin(), h.end(), decision::defect) != h.end())
         return decision::defect;
     return decision::cooperate;
 }
 
+// Defect until the opponent cooperates, then continually cooperate
 decision sucker(history_t h) {
     if (std::find(h.begin(), h.end(), decision::cooperate) != h.end())
         return decision::cooperate;
     return decision::defect;
 }
 
+// Start by defecting, and then only cooperate if the opponent has
+// cooperated twice in a row
 decision hesitant(history_t h) {
     if (h.size() < 2)
         return decision::defect;

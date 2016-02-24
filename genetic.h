@@ -85,13 +85,13 @@ struct genetic_strategy {
 // Create a prisoner_t given a genetic strategy, where the name is a string
 // representing it's strategy
 prisoner_t make_prisoner_t(const genetic_strategy& gs) {
-    std::string name = "";
-    for (decision d : gs.strategy) {
-        if (d == decision::cooperate)
-            name += 'c';
-        else
-            name += 'd';
-    }
+    auto f = [] (std::string s, decision d) {
+        if (d == decision::cooperate) s += 'c';
+        else s += 'd';
+        return s;
+    };
+    auto name = std::accumulate(gs.strategy.begin(), gs.strategy.end(),
+            std::string(), f);
     return {name, gs};
 }
 
@@ -106,7 +106,8 @@ prisoner_t make_prisoner_t(const genetic_strategy& gs) {
 // Since the weights are fixed, we can precompute the cummulative sums, and binary
 // search for the value that will cause P to become less than 0
 template <typename T>
-std::vector<T> weighted_random_sample(const std::vector<std::pair<T, int>>& v, int n) {
+std::vector<T>
+weighted_random_sample(const std::vector<std::pair<T, int>>& v, int n) {
     std::vector<int> cummulative;
     int total = 0;
     for (auto& i: v) {

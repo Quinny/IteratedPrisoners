@@ -7,6 +7,7 @@
 #include <functional>
 
 #include "common.h"
+#include "bots.h"
 
 // TODO
 // - actual genetic part
@@ -92,6 +93,36 @@ prisoner_t make_prisoner_t(const genetic_strategy& gs) {
             name += 'd';
     }
     return {name, gs};
+}
+
+// returns a weighted random sample of v.  The weight of each element
+// is represented by the int in the pair.  It is based on the following
+// idea:
+//      - Generate a random integer P <- [0, sum(weights)]
+//      - iterate through the vector, and substract each of the weights from P
+//      - Once P becomes less than 0, return the last seen element
+//
+// Modifications have been made to make this algorithm more efficient.
+// Since the weights are fixed, we can precompute the cummulative sums, and binary
+// search for the value that will cause P to become less than 0
+template <typename T>
+std::vector<T> weighted_random_sample(const std::vector<std::pair<T, int>>& v, int n) {
+    std::vector<int> cummulative;
+    int total = 0;
+    for (auto& i: v) {
+        total += i.second;
+        cummulative.push_back(total);
+    }
+
+    std::vector<T> sample;
+    for (int i = 0; i < n; ++i) {
+        int prob = rand() % total;
+        auto it = std::upper_bound(cummulative.begin(), cummulative.end(), prob);
+        auto index = it - cummulative.begin();
+        sample.push_back(v[index].first);
+    }
+
+    return sample;
 }
 
 #endif /* GENETIC_H */

@@ -25,6 +25,13 @@ decision random_decision() {
     return decision::defect;
 }
 
+template <typename T>
+T random_range(T first, T last) {
+    static std::knuth_b gen (std::time(nullptr));
+    std::uniform_int_distribution<T> dist(first, last);
+    return dist(gen);
+}
+
 struct genetic_strategy {
     history_t history;
     std::vector<decision> strategy;
@@ -116,7 +123,7 @@ weighted_random_sample(const std::vector<std::pair<T, int>>& v, int n) {
 
     std::vector<T> sample;
     for (int i = 0; i < n; ++i) {
-        int prob = rand() % total;
+        int prob = random_range(0, total);
         auto it = std::upper_bound(cummulative.begin(), cummulative.end(), prob);
         auto index = it - cummulative.begin();
         sample.push_back(v[index].first);
@@ -128,7 +135,7 @@ weighted_random_sample(const std::vector<std::pair<T, int>>& v, int n) {
 // Cross two genome strings, maybe be differing lengths
 std::pair<std::string, std::string> cross(const std::string& s1,
                                           const std::string& s2) {
-    auto point = rand() % std::min(s1.size(), s2.size());
+    auto point = random_range(0UL, std::min(s1.size(), s2.size()));
     std::string p1 = s1.substr(0, point),
                 p2 = s2.substr(0, point);
 
@@ -142,7 +149,7 @@ std::pair<std::string, std::string> cross(const std::string& s1,
 
 std::string mutate(std::string s, const int rate) {
     auto maybe_change = [&] (const char c) {
-        if (rand() % 100 < rate) {
+        if (random_range(0, 100) < rate) {
             auto d = random_decision();
             if (d == decision::defect) return 'd';
             return 'c';

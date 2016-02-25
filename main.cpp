@@ -27,7 +27,7 @@ int main() {
         std::ostream_iterator<score_t>(std::cout, "\n")
     );
 
-    evolve(100);
+    evolve(100, 30, 10);
 
     return 0;
 }

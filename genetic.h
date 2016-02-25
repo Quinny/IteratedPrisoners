@@ -45,7 +45,8 @@ struct genetic_strategy {
 
     // Construct a strategy given a genome string
     genetic_strategy(const std::string& genome) :
-        strategy(genome.size()), mem_size(genome.size())
+        strategy(genome.size()),
+        mem_size(std::log(genome.size()) / std::log(4))
     {
         auto f = [] (char c) {
             if (c == 'c') return decision::cooperate;
@@ -161,30 +162,36 @@ std::string mutate(std::string s, const int rate) {
     return s;
 }
 
-void evolve(int pop_size) {
+void evolve(int pop_size, int mutation_rate, int generations) {
     // initial population
     std::vector<prisoner_t> population;
     for (int i = 0; i < pop_size; ++i)
         population.push_back(make_prisoner_t(genetic_strategy(3)));
 
-    // fitness
-    std::vector<std::pair<prisoner_t, int>> evaluation;
-    for (auto i: population)
-        evaluation.push_back({i, total_score(i, bots::all, pop_size)});
+    for (int i = 0; i < generations; ++i) {
+        // fitness
+        std::vector<std::pair<prisoner_t, int>> evaluation;
+        for (auto i: population)
+            evaluation.push_back({i, total_score(i, bots::all, pop_size)});
 
-    // selection weighted on fitness
-    auto selection = weighted_random_sample(evaluation, pop_size);
+        // selection weighted on fitness
+        auto selection = weighted_random_sample(evaluation, pop_size);
 
-    // cross over
-    std::vector<std::string> genomes;
-    for (auto i = 0UL; i < selection.size() - 1; ++i) {
-        auto p = cross(selection[i].name, selection[i + 1].name);
-        genomes.push_back(p.first); genomes.push_back(p.second);
+        // cross over
+        std::vector<std::string> genomes;
+        for (auto i = 0UL; i < selection.size() - 1; ++i) {
+            auto p = cross(selection[i].name, selection[i + 1].name);
+            genomes.push_back(p.first); genomes.push_back(p.second);
+        }
+
+        // mutate
+        std::transform(genomes.begin(), genomes.end(), genomes.begin(),
+                std::bind(mutate, _1, mutation_rate));
+
+        population.clear();
+        for (auto i: genomes)
+            population.push_back(make_prisoner_t(genetic_strategy(i)));
     }
-
-    // mutate
-    std::transform(genomes.begin(), genomes.end(), genomes.begin(),
-            std::bind(mutate, _1, 30));
 }
 
 #endif /* GENETIC_H */

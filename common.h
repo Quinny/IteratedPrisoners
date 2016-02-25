@@ -14,19 +14,19 @@ enum class decision {
 
 // Types used for representing move history, and strategy functions
 using history_t  = std::list<decision>;
-using strategy_t = std::function<decision(history_t)>;
+using strategy_t = std::function<decision(const history_t&)>;
 
 // A prisoner has a name and a strategy
 struct prisoner_t {
     std::string name;
     strategy_t strategy;
 
-    decision operator () (history_t h) {
+    decision operator () (const history_t& h) const {
         return strategy(h);
     }
 };
 
-std::ostream& operator << (std::ostream& out, prisoner_t p) {
+std::ostream& operator << (std::ostream& out, const prisoner_t& p) {
     out << p.name;
     return out;
 }
@@ -51,7 +51,7 @@ int score(decision d1, decision d2) {
 // and record prisoner p1's score.  To get p2's score, the arguments
 // should be reversed.  Doing it this way makes it so that each
 // prisoner gets the opportunity to go first, thus removing bias
-int play(prisoner_t p1, prisoner_t p2, int n) {
+int play(const prisoner_t& p1, const prisoner_t& p2, int n) {
     history_t p1_hist, p2_hist;
     int p1_score = 0;
 
@@ -68,7 +68,7 @@ int play(prisoner_t p1, prisoner_t p2, int n) {
 
 // Play prisoner p against all others for n rounds and return
 // the total score obtained
-int total_score(prisoner_t p, std::vector<prisoner_t> ps, int n) {
+int total_score(const prisoner_t& p, const std::vector<prisoner_t>& ps, int n) {
     int score = 0;
     for (auto i: ps)
         score += play(p, i, n);
@@ -76,7 +76,7 @@ int total_score(prisoner_t p, std::vector<prisoner_t> ps, int n) {
 }
 
 std::vector<std::pair<prisoner_t, int>>
-play_tourny(std::vector<prisoner_t> players, int n) {
+play_tourny(const std::vector<prisoner_t>& players, int n) {
     std::vector<std::pair<prisoner_t, int>> ret;
     for (auto p1: players) {
         auto score = total_score(p1, players, n);

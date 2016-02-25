@@ -26,5 +26,8 @@ int main() {
         sb.end(),
         std::ostream_iterator<score_t>(std::cout, "\n")
     );
+
+    evolve(100);
+
     return 0;
 }

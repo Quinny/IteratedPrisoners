@@ -9,6 +9,8 @@
 #include "common.h"
 #include "bots.h"
 
+using namespace std::placeholders;
+
 // TODO
 // - actual genetic part
 // - maybe use total_score from common as fitness
@@ -121,6 +123,61 @@ weighted_random_sample(const std::vector<std::pair<T, int>>& v, int n) {
     }
 
     return sample;
+}
+
+// Cross two genome strings, maybe be differing lengths
+std::pair<std::string, std::string> cross(const std::string& s1,
+                                          const std::string& s2) {
+    auto point = rand() % std::min(s1.size(), s2.size());
+    std::string p1 = s1.substr(0, point),
+                p2 = s2.substr(0, point);
+
+    for (auto i = point; i < s1.size(); ++i)
+        p2 += s1[i];
+    for (auto i = point; i < s2.size(); ++i)
+        p1 += s2[i];
+
+    return {p1, p2};
+}
+
+std::string mutate(std::string s, const int rate) {
+    auto maybe_change = [&] (const char c) {
+        if (rand() % 100 < rate) {
+            auto d = random_decision();
+            if (d == decision::defect) return 'd';
+            return 'c';
+        }
+        return c;
+    };
+
+    std::transform(s.begin(), s.end(), s.begin(), maybe_change);
+    return s;
+}
+
+void evolve(int pop_size) {
+    // initial population
+    std::vector<prisoner_t> population;
+    for (int i = 0; i < pop_size; ++i)
+        population.push_back(make_prisoner_t(genetic_strategy(3)));
+
+    // fitness
+    std::vector<std::pair<prisoner_t, int>> evaluation;
+    for (auto i: population)
+        evaluation.push_back({i, total_score(i, bots::all, pop_size)});
+
+    // selection weighted on fitness
+    auto selection = weighted_random_sample(evaluation, pop_size);
+
+    // cross over
+    std::vector<std::string> genomes;
+    for (auto i = 0UL; i < selection.size() - 1; ++i) {
+        auto p = cross(selection[i].name, selection[i + 1].name);
+        genomes.push_back(p.first); genomes.push_back(p.second);
+    }
+
+    // mutate
+    std::transform(genomes.begin(), genomes.end(), genomes.begin(),
+            std::bind(mutate, _1, 30));
 }
 
 #endif /* GENETIC_H */

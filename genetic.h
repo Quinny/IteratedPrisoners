@@ -10,6 +10,7 @@
 #include "bots.h"
 
 using namespace std::placeholders;
+using score_t = std::pair<prisoner_t, int>;
 
 // TODO
 // - actual genetic part
@@ -133,6 +134,39 @@ weighted_random_sample(const std::vector<std::pair<T, int>>& v, int n) {
     return sample;
 }
 
+// Generate an initial population of size n with memory
+// sizes ranging from [first, last]
+std::vector<prisoner_t> initial_population(std::size_t n,
+        std::size_t first, std::size_t last) {
+    std::vector<prisoner_t> ret;
+    for (auto i = 0UL; i < n; ++i)
+        ret.push_back(make_prisoner_t(genetic_strategy(random_range(first, last))));
+    return ret;
+}
+
+std::vector<score_t> evaluate_fitness(const std::vector<prisoner_t>& v) {
+    std::vector<score_t> ret(v.size());
+    auto fitness = std::bind(total_score, _1, bots::all, 100);
+    std::transform(v.begin(), v.end(), ret.begin(), [&] (const prisoner_t& p) {
+            return std::make_pair(p, fitness(p));
+    });
+    return ret;
+}
+
+std::string mutate_strategy(std::string s, const int rate) {
+    auto maybe_change = [&] (const char c) {
+        if (random_range(0, 100) < rate) {
+            auto d = random_decision();
+            if (d == decision::defect) return 'd';
+            return 'c';
+        }
+        return c;
+    };
+
+    std::transform(s.begin(), s.end(), s.begin(), maybe_change);
+    return s;
+}
+
 // Cross two genome strings, maybe be differing lengths
 std::pair<std::string, std::string> cross(const std::string& s1,
                                           const std::string& s2) {
@@ -148,31 +182,14 @@ std::pair<std::string, std::string> cross(const std::string& s1,
     return {p1, p2};
 }
 
-std::string mutate(std::string s, const int rate) {
-    auto maybe_change = [&] (const char c) {
-        if (random_range(0, 100) < rate) {
-            auto d = random_decision();
-            if (d == decision::defect) return 'd';
-            return 'c';
-        }
-        return c;
-    };
-
-    std::transform(s.begin(), s.end(), s.begin(), maybe_change);
-    return s;
-}
 
 void evolve(int pop_size, int mutation_rate, int generations) {
-    // initial population
-    std::vector<prisoner_t> population;
-    for (int i = 0; i < pop_size; ++i)
-        population.push_back(make_prisoner_t(genetic_strategy(3)));
+    auto population = initial_population(pop_size, 3, 3);
+    auto mutate     = std::bind(mutate_strategy, _1, mutation_rate);
 
     for (int i = 0; i < generations; ++i) {
         // fitness
-        std::vector<std::pair<prisoner_t, int>> evaluation;
-        for (auto i: population)
-            evaluation.push_back({i, total_score(i, bots::all, pop_size)});
+        auto evaluation = evaluate_fitness(population);
 
         // selection weighted on fitness
         auto selection = weighted_random_sample(evaluation, pop_size);
@@ -185,9 +202,9 @@ void evolve(int pop_size, int mutation_rate, int generations) {
         }
 
         // mutate
-        std::transform(genomes.begin(), genomes.end(), genomes.begin(),
-                std::bind(mutate, _1, mutation_rate));
+        std::transform(genomes.begin(), genomes.end(), genomes.begin(), mutate);
 
+        // build next population
         population.clear();
         for (auto i: genomes)
             population.push_back(make_prisoner_t(genetic_strategy(i)));

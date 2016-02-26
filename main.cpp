@@ -1,8 +1,5 @@
-#include <vector>
-#include <functional>
 #include <iostream>
-#include <list>
-#include <iterator>
+#include <fstream>
 
 #include "common.h"
 #include "bots.h"
@@ -15,17 +12,20 @@ int main() {
     auto cp       = bots::all;
 
 
-    //cp.push_back(gen_guy);
     cp.push_back(ev_guy);
 
     auto sb = play_tourny(cp, 100);
     std::sort(sb.begin(), sb.end(), [] (score_t x, score_t y) {
             return x.second > y.second;
     });
+
     for (auto i: sb) {
         std::cout << i.first << ", " << i.second << std::endl;
     }
 
+    // append winner to a text file for later analysis
+    std::fstream f("winners.txt", std::ios_base::app);
+    f << sb.front().first << " " << sb.front().second << std::endl;
 
     return 0;
 }

@@ -15,10 +15,6 @@ namespace genetic {
 
 using namespace std::placeholders;
 
-// TODO
-// - actual genetic part
-// - maybe use total_score from common as fitness
-
 decision random_decision() {
     static std::uniform_int_distribution<int> dist(0, 1);
     static std::knuth_b gen (std::time(nullptr));
@@ -185,8 +181,12 @@ std::pair<std::string, std::string> cross(const std::string& s1,
     return {p1, p2};
 }
 
+template <typename Compare, typename Key, typename T>
+bool compare_on(Compare&& c, Key&& k, const T& x, const T& y) {
+    return c(k(x), k(y));
+}
 
-void evolve(int pop_size, int mutation_rate, int generations) {
+prisoner_t evolve(int pop_size, int mutation_rate, int generations) {
     auto population = initial_population(pop_size, 3, 3);
     auto mutate     = std::bind(mutate_strategy, _1, mutation_rate);
 
@@ -212,6 +212,15 @@ void evolve(int pop_size, int mutation_rate, int generations) {
         for (auto i: genomes)
             population.push_back(make_prisoner_t(genetic_strategy(i)));
     }
+
+    // pick the guy with the best fitness after all generations have been played
+    auto winner = std::max_element(population.begin(), population.end(),
+            [] (prisoner_t one, prisoner_t two) {
+                return total_score(one, bots::all, 100)
+                       < total_score(two, bots::all, 100);
+            });
+
+    return *winner;
 }
 
 } // genetic namespace

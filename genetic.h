@@ -213,14 +213,24 @@ prisoner_t evolve(int pop_size, int mutation_rate, int generations) {
             population.push_back(make_prisoner_t(genetic_strategy(i)));
     }
 
+    prisoner_t best = population.front();
+    int best_score = total_score(best, bots::all, 100);
+    for (auto i = 1UL; i < population.size(); ++i) {
+        auto score = total_score(population[i], bots::all, 100);
+        if (score > best_score) {
+            best = population[i];
+            best_score = score;
+        }
+    }
+    /*
     // pick the guy with the best fitness after all generations have been played
     auto winner = std::max_element(population.begin(), population.end(),
-            [] (prisoner_t one, prisoner_t two) {
+            [] (const prisoner_t& one, const prisoner_t& two) {
                 return total_score(one, bots::all, 100)
                        < total_score(two, bots::all, 100);
             });
-
-    return *winner;
+    */
+    return best;
 }
 
 } // genetic namespace

@@ -5,6 +5,7 @@
 #include <random>
 #include <ctime>
 #include <functional>
+#include <future>
 
 #include "common.h"
 #include "bots.h"
@@ -143,12 +144,19 @@ std::vector<prisoner_t> initial_population(std::size_t n,
     return ret;
 }
 
-std::vector<score_t> evaluate_fitness(const std::vector<prisoner_t>& v) {
+std::vector<score_t> evaluate_async(const std::vector<prisoner_t>& v) {
+    std::vector<std::future<int>> futs;
     std::vector<score_t> ret(v.size());
+
     auto fitness = std::bind(total_score, _1, bots::all, 100);
-    std::transform(v.begin(), v.end(), ret.begin(), [&] (const prisoner_t& p) {
-            return std::make_pair(p, fitness(p));
-    });
+    for (const auto& i: v) {
+        futs.emplace_back(std::async(fitness, i));
+    }
+
+    for (auto i = 0UL; i < v.size(); ++i) {
+        ret.emplace_back(v[i], futs[i].get());
+    }
+
     return ret;
 }
 
@@ -181,18 +189,13 @@ std::pair<std::string, std::string> cross(const std::string& s1,
     return {p1, p2};
 }
 
-template <typename Compare, typename Key, typename T>
-bool compare_on(Compare&& c, Key&& k, const T& x, const T& y) {
-    return c(k(x), k(y));
-}
-
 prisoner_t evolve(int pop_size, int mutation_rate, int generations) {
     auto population = initial_population(pop_size, 3, 3);
     auto mutate     = std::bind(mutate_strategy, _1, mutation_rate);
 
     for (int i = 0; i < generations; ++i) {
         // fitness
-        auto evaluation = evaluate_fitness(population);
+        auto evaluation = evaluate_async(population);
 
         // selection weighted on fitness
         auto selection = weighted_random_sample(evaluation, pop_size);

@@ -8,26 +8,18 @@
 #include "bots.h"
 #include "genetic.h"
 
-template <typename T, typename U>
-std::ostream& operator << (std::ostream& out, std::pair<T, U> p) {
-    out << "(" << p.first << ", " << p.second << ")";
-    return out;
-}
-
 int main() {
-    using score_t = std::pair<prisoner_t, int>;
-    auto gen_guy  = make_prisoner_t(genetic_strategy(4));
+    using namespace ipd;
+    auto gen_guy  = genetic::make_prisoner_t(genetic::genetic_strategy(4));
     auto cp       = bots::all;
     cp.push_back(gen_guy);
 
     auto sb = play_tourny(cp, 100);
-    std::copy(
-        sb.begin(),
-        sb.end(),
-        std::ostream_iterator<score_t>(std::cout, "\n")
-    );
+    for (auto i: sb) {
+        std::cout << i.first << ", " << i.second << std::endl;
+    }
 
-    evolve(100, 30, 10);
+    genetic::evolve(100, 30, 10);
 
     return 0;
 }

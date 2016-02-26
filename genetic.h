@@ -9,8 +9,11 @@
 #include "common.h"
 #include "bots.h"
 
+namespace ipd {
+
+namespace genetic {
+
 using namespace std::placeholders;
-using score_t = std::pair<prisoner_t, int>;
 
 // TODO
 // - actual genetic part
@@ -210,5 +213,9 @@ void evolve(int pop_size, int mutation_rate, int generations) {
             population.push_back(make_prisoner_t(genetic_strategy(i)));
     }
 }
+
+} // genetic namespace
+
+} // ipd namespace
 
 #endif /* GENETIC_H */

@@ -4,6 +4,8 @@
 #include "../common.h"
 #include "../bots.h"
 
+using namespace ipd;
+
 const decision d = decision::defect;
 const decision c = decision::cooperate;
 

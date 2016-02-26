@@ -6,6 +6,8 @@
 #include <functional>
 #include <vector>
 
+namespace ipd {
+
 // A bot can decide to cooperate or defect
 enum class decision {
     cooperate,
@@ -25,6 +27,8 @@ struct prisoner_t {
         return strategy(h);
     }
 };
+
+using score_t = std::pair<prisoner_t, int>;
 
 std::ostream& operator << (std::ostream& out, const prisoner_t& p) {
     out << p.name;
@@ -83,6 +87,8 @@ play_tourny(const std::vector<prisoner_t>& players, int n) {
         ret.push_back({p1, score});
     }
     return ret;
+}
+
 }
 
 #endif /* COMMON_H */

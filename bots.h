@@ -7,6 +7,8 @@
 
 // All default stateless bots
 
+namespace ipd {
+
 namespace bots {
 
 // Always cooperate
@@ -92,5 +94,8 @@ const std::vector<prisoner_t> all = {
     {"Hesitant",          hesitant}
 };
 
-}
+} // bots namespace
+
+} // ipd namespace
+
 #endif /* BOTS_H */

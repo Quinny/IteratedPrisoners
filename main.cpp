@@ -55,8 +55,8 @@ void winner_battle() {
             make_prisoner_t(genetic::genetic_strategy(genome))
         );
 
-    //for (const auto& i: bots::all)
-        //winners.push_back(i);
+    for (const auto& i: bots::all)
+        winners.push_back(i);
 
     auto sb = play_tourny(winners, 100);
     std::sort(sb.begin(), sb.end(), score_compare());
@@ -65,6 +65,7 @@ void winner_battle() {
 }
 
 int main() {
-    ev_against_classic();
+    //ev_against_classic();
+    winner_battle();
     return 0;
 }

@@ -1,0 +1,11 @@
+- Seems like memory size 2-3 creates optimal performance
+- Increasing memory size past this has negative effects
+
+- Fitness function may be biased towards bots which tend to cooperate
+- Putting all winning bots and all classic bots in a tournament against one
+    another produces the all defect bot as a winner
+- The fitness function may need to be adapted to include more bots
+    which tend to defect in order to increase average score
+
+- Adding more defect bots to the evaluation function didn't help
+- Maybe the genetic bots playing against each other hurts their scores?

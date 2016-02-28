@@ -49,6 +49,7 @@ struct genetic_strategy {
         strategy(genome.size()),
         mem_size(std::log(genome.size()) / std::log(4))
     {
+        // converts a character to a decision
         auto f = [] (char c) {
             if (c == 'c') return decision::cooperate;
             return decision::defect;
@@ -93,6 +94,7 @@ struct genetic_strategy {
 // Create a prisoner_t given a genetic strategy, where the name is a string
 // representing it's strategy
 prisoner_t make_prisoner_t(const genetic_strategy& gs) {
+    // converts a decision to a character
     auto f = [] (std::string s, decision d) {
         if (d == decision::cooperate) s += 'c';
         else s += 'd';
@@ -147,8 +149,8 @@ std::vector<prisoner_t> initial_population(std::size_t n,
 std::vector<score_t> evaluate_async(const std::vector<prisoner_t>& v) {
     std::vector<std::future<int>> futs;
     std::vector<score_t> ret(v.size());
-
     auto fitness = std::bind(total_score, _1, bots::all, 100);
+
     for (const auto& i: v) {
         futs.emplace_back(std::async(fitness, i));
     }
@@ -225,14 +227,7 @@ prisoner_t evolve(int pop_size, int mutation_rate, int generations) {
             best_score = score;
         }
     }
-    /*
-    // pick the guy with the best fitness after all generations have been played
-    auto winner = std::max_element(population.begin(), population.end(),
-            [] (const prisoner_t& one, const prisoner_t& two) {
-                return total_score(one, bots::all, 100)
-                       < total_score(two, bots::all, 100);
-            });
-    */
+
     return best;
 }
 

@@ -5,6 +5,8 @@
 #include <list>
 #include <functional>
 #include <vector>
+#include <future>
+#include <iostream>
 
 namespace ipd {
 
@@ -33,6 +35,11 @@ using score_t = std::pair<prisoner_t, int>;
 std::ostream& operator << (std::ostream& out, const prisoner_t& p) {
     out << p.name;
     return out;
+}
+
+std::ostream& operator << (std::ostream& os, const score_t& s) {
+    os << "(" << s.first << ", " << s.second << ")";
+    return os;
 }
 
 // Modified prisoners dilemma score function.  Re arranged so that

@@ -27,7 +27,7 @@ struct score_compare {
 
 void ev_against_classic() {
     using namespace ipd;
-    auto ev_guy   = genetic::evolve(100, 30, 10);
+    auto ev_guy   = genetic::evolve(100, 30, 100);
     auto cp       = bots::all;
     cp.push_back(ev_guy);
 
@@ -65,7 +65,8 @@ void winner_battle() {
 }
 
 int main() {
-    //ev_against_classic();
-    winner_battle();
+    auto t2 = time_operation(ev_against_classic);
+
+    std::cout << "took " << t2 << std::endl;
     return 0;
 }

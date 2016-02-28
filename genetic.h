@@ -179,7 +179,7 @@ std::string mutate_strategy(std::string s, const int rate) {
 // Cross two genome strings, maybe be differing lengths
 std::pair<std::string, std::string> cross(const std::string& s1,
                                           const std::string& s2) {
-    auto point = random_range(0UL, std::min(s1.size(), s2.size()));
+    auto point = random_range<std::size_t>(0UL, std::min(s1.size(), s2.size()));
     std::string p1 = s1.substr(0, point),
                 p2 = s2.substr(0, point);
 

@@ -9,6 +9,7 @@
 
 #include "common.h"
 #include "bots.h"
+#include "profile.h"
 
 namespace ipd {
 
@@ -149,7 +150,7 @@ std::vector<prisoner_t> initial_population(std::size_t n,
 std::vector<score_t> evaluate_async(const std::vector<prisoner_t>& v) {
     std::vector<std::future<int>> futs;
     std::vector<score_t> ret(v.size());
-    auto fitness = std::bind(total_score, _1, bots::all, 100);
+    auto fitness = std::bind(total_score, _1, bots::all, 64);
 
     for (const auto& i: v) {
         futs.emplace_back(std::async(fitness, i));
@@ -197,20 +198,28 @@ prisoner_t evolve(int pop_size, int mutation_rate, int generations) {
 
     for (int i = 0; i < generations; ++i) {
         // fitness
+        qp::profiler fit_prof("fitness evaluation");
         auto evaluation = evaluate_async(population);
+        fit_prof.stop();
 
         // selection weighted on fitness
+        qp::profiler selection_prof("weighted sample");
         auto selection = weighted_random_sample(evaluation, pop_size);
+        selection_prof.stop();
 
         // cross over
+        qp::profiler cross_prof("cross over");
         std::vector<std::string> genomes;
         for (auto i = 0UL; i < selection.size() - 1; ++i) {
             auto p = cross(selection[i].name, selection[i + 1].name);
             genomes.push_back(p.first); genomes.push_back(p.second);
         }
+        cross_prof.stop();
 
         // mutate
+        qp::profiler mut_prof("mutate");
         std::transform(genomes.begin(), genomes.end(), genomes.begin(), mutate);
+        mut_prof.stop();
 
         // build next population
         population.clear();

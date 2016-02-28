@@ -6,18 +6,8 @@
 #include "common.h"
 #include "bots.h"
 #include "genetic.h"
+#include "profile.h"
 
-
-// Run the function f(args) and return the execution time in seconds
-// for bench marking bottle necks and quantifying speed ups
-template <typename Func, typename... Args>
-double time_operation(Func&& f, Args&&... args) {
-    using namespace std::chrono;
-    auto t1 = high_resolution_clock::now();
-    f(args...);
-    auto t2 = high_resolution_clock::now();
-    return duration_cast<duration<double>>(t2 - t1).count();
-}
 
 struct score_compare {
     bool operator () (const ipd::score_t& x, const ipd::score_t& y) const {
@@ -27,7 +17,7 @@ struct score_compare {
 
 void ev_against_classic() {
     using namespace ipd;
-    auto ev_guy   = genetic::evolve(100, 30, 200);
+    auto ev_guy   = genetic::evolve(100, 30, 100);
     auto cp       = bots::all;
     cp.push_back(ev_guy);
 
@@ -65,13 +55,10 @@ void winner_battle() {
 }
 
 int main() {
-<<<<<<< HEAD
-    auto t2 = time_operation(ev_against_classic);
-
-    std::cout << "took " << t2 << std::endl;
-=======
-    auto t = time_operation(ev_against_classic);
-    std::cout << t << std::endl;
->>>>>>> d139b93bb20f1c7067a1445714a6a52b797c75f9
+    qp::profiler p("entire thing");
+    ev_against_classic();
+    std::cout << "--------" << std::endl;
+    p.stop();
+    qp::profiler::dump();
     return 0;
 }

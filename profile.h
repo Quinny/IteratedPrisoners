@@ -28,14 +28,13 @@ class profiler {
 
 private:
     static std::map<std::string, double> sections;
-    static log_policy policy;
-
     std::chrono::time_point<std::chrono::high_resolution_clock> t1;
     std::chrono::time_point<std::chrono::high_resolution_clock> t2;
     bool done;
 
 public:
     std::string tag;
+    static log_policy policy;
 
     profiler(std::string t): tag(t),
         t1(std::chrono::high_resolution_clock::now()), done(false) {};

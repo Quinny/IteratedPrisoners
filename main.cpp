@@ -8,7 +8,6 @@
 #include "genetic.h"
 #include "profile.h"
 
-
 struct score_compare {
     bool operator () (const ipd::score_t& x, const ipd::score_t& y) const {
         return x.second > y.second;
@@ -17,7 +16,7 @@ struct score_compare {
 
 void ev_against_classic() {
     using namespace ipd;
-    auto ev_guy   = genetic::evolve(100, 30, 100);
+    auto ev_guy   = genetic::evolve(100, 30, 10);
     auto cp       = bots::all;
     cp.push_back(ev_guy);
 

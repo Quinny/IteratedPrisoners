@@ -81,7 +81,7 @@ int play(const prisoner_t& p1, const prisoner_t& p2, int n) {
 // the total score obtained
 int total_score(const prisoner_t& p, const std::vector<prisoner_t>& ps, int n) {
     int score = 0;
-    for (auto i: ps)
+    for (const auto& i: ps)
         score += play(p, i, n);
     return score;
 }

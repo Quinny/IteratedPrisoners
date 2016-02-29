@@ -9,3 +9,9 @@
 
 - Adding more defect bots to the evaluation function didn't help
 - Maybe the genetic bots playing against each other hurts their scores?
+
+- Attempted finding distance from tit for tat
+- Didn't work out very well
+
+- Fitness function performance vs tit for tat bot did very well
+- Seems to be able to defend against defect bots well

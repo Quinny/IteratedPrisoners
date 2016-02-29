@@ -8,17 +8,6 @@
 
 namespace qp {
 
-// Run the function f(args) and return the execution time in seconds
-// for bench marking bottle necks and quantifying speed ups
-template <typename Func, typename... Args>
-double time_operation(Func&& f, Args&&... args) {
-    using namespace std::chrono;
-    auto t1 = high_resolution_clock::now();
-    f(args...);
-    auto t2 = high_resolution_clock::now();
-    return duration_cast<duration<double>>(t2 - t1).count();
-}
-
 enum class log_policy {
     loud,
     silent
@@ -36,8 +25,8 @@ public:
     std::string tag;
     static log_policy policy;
 
-    profiler(std::string t): tag(t),
-        t1(std::chrono::high_resolution_clock::now()), done(false) {};
+    profiler(std::string t): t1(std::chrono::high_resolution_clock::now()),
+         done(false), tag(t) {};
 
     void log() {
         if (profiler::policy == log_policy::loud)
@@ -65,7 +54,7 @@ public:
 };
 
 log_policy profiler::policy = log_policy::silent;
-std::map<std::string, double> profiler::sections = {};
+std::map<std::string, double> profiler::sections{};
 
 }
 

@@ -55,7 +55,8 @@ void winner_battle() {
 
 int main() {
     qp::profiler p("entire thing");
-    ev_against_classic();
+    //ev_against_classic();
+    winner_battle();
     std::cout << "--------" << std::endl;
     p.stop();
     qp::profiler::dump();

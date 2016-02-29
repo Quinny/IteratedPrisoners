@@ -85,9 +85,15 @@ struct genetic_strategy {
         return code;
     }
 
+    void record(decision d) {
+        if (history.size() == mem_size)
+            history.pop_back();
+        history.push_front(d);
+    }
+
     decision operator () (const history_t& op_history) {
         auto d = strategy[encode(op_history)];
-        history.push_front(d);
+        record(d);
         return d;
     }
 };
@@ -98,7 +104,8 @@ std::string tft_genome(int mem_size) {
     for (int i = 1; i < limit; ++i) {
         if ((i & 2) > 0)
             genome += "c";
-        genome += "d";
+        else
+            genome += "d";
     }
     return genome;
 }
@@ -176,6 +183,32 @@ std::vector<score_t> evaluate_async(const std::vector<prisoner_t>& v) {
     return ret;
 }
 
+int hamming_distance(const std::string& s1, const std::string& s2) {
+    int ret = 0;
+    for (auto i = 0UL; i < s1.size(); ++i) {
+        if (s1[i] == s2[i])
+            ++ret;
+    }
+    return ret;
+}
+
+std::vector<score_t> evaluate_tft_dist(const std::vector<prisoner_t>& v, int size) {
+    std::vector<score_t> ret;
+    for (const auto& i: v) {
+        ret.emplace_back(i,
+                i.name.size() - hamming_distance(i.name, tft_genome(size)));
+    }
+    return ret;
+}
+
+std::vector<score_t> evaluate_vs_tft(const std::vector<prisoner_t>& v) {
+    std::vector<score_t> ret;
+    prisoner_t tft = {"", bots::tft};
+    for (const auto& i: v)
+        ret.emplace_back(i, play(i, tft, 64));
+    return ret;
+}
+
 std::string mutate_strategy(std::string s, const int rate) {
     auto maybe_change = [&] (const char c) {
         if (random_range(0, 100) < rate) {
@@ -211,7 +244,9 @@ prisoner_t evolve(int pop_size, int mutation_rate, int generations) {
 
     for (int i = 0; i < generations; ++i) {
         // fitness
-        auto evaluation = evaluate_async(population);
+        //auto evaluation = evaluate_async(population);
+        //auto evaluation = evaluate_tft_dist(population, 3);
+        auto evaluation = evaluate_vs_tft(population);
 
         // selection weighted on fitness
         auto selection = weighted_random_sample(evaluation, pop_size);

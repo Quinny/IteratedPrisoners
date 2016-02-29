@@ -96,7 +96,8 @@ std::string tft_genome(int mem_size) {
     int limit = std::pow(mem_size, 4);
     std::string genome = "c";
     for (int i = 1; i < limit; ++i) {
-        if (i & 2 > 0) genome += "c";
+        if ((i & 2) > 0)
+            genome += "c";
         genome += "d";
     }
     return genome;

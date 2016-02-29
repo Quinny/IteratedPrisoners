@@ -92,6 +92,16 @@ struct genetic_strategy {
     }
 };
 
+std::string tft_genome(int mem_size) {
+    int limit = std::pow(mem_size, 4);
+    std::string genome = "c";
+    for (int i = 1; i < limit; ++i) {
+        if (i & 2 > 0) genome += "c";
+        genome += "d";
+    }
+    return genome;
+}
+
 // Create a prisoner_t given a genetic strategy, where the name is a string
 // representing it's strategy
 prisoner_t make_prisoner_t(const genetic_strategy& gs) {

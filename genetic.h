@@ -6,6 +6,7 @@
 #include <ctime>
 #include <functional>
 #include <future>
+#include <cassert>
 
 #include "common.h"
 #include "bots.h"
@@ -145,12 +146,13 @@ weighted_random_sample(const std::vector<std::pair<T, int>>& v, int n) {
         cummulative.push_back(total);
     }
 
-    std::vector<T> sample;
+    std::vector<T> sample(n);
     for (int i = 0; i < n; ++i) {
-        int prob = random_range(0, total);
+        int prob = random_range(0, total - 1);
         auto it = std::upper_bound(cummulative.begin(), cummulative.end(), prob);
-        auto index = it - cummulative.begin();
-        sample.push_back(v[index].first);
+        assert(it != cummulative.end());
+        auto index = std::distance(cummulative.begin(), it);
+        sample[i] = v[index].first;
     }
 
     return sample;

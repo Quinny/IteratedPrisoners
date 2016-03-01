@@ -16,7 +16,7 @@ struct score_compare {
 
 void ev_against_classic() {
     using namespace ipd;
-    auto ev_guy   = genetic::evolve(1000, 2, 30, genetic::evaluate_vs_tft);
+    auto ev_guy   = genetic::evolve(100, 2, 1000, genetic::evaluate_vs_tft);
     auto cp       = bots::all;
     cp.push_back(ev_guy);
 

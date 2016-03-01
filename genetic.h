@@ -238,15 +238,17 @@ std::pair<std::string, std::string> cross(const std::string& s1,
     return {p1, p2};
 }
 
-prisoner_t evolve(int pop_size, int mutation_rate, int generations) {
+using fitness_fn = std::function<
+    std::vector<score_t>(const std::vector<prisoner_t>&)
+>;
+prisoner_t evolve(int pop_size, int mutation_rate, int generations,
+        fitness_fn fitness_func) {
     auto population = initial_population(pop_size, 3, 3);
     auto mutate     = std::bind(mutate_strategy, _1, mutation_rate);
 
     for (int i = 0; i < generations; ++i) {
         // fitness
-        //auto evaluation = evaluate_async(population);
-        //auto evaluation = evaluate_tft_dist(population, 3);
-        auto evaluation = evaluate_vs_tft(population);
+        auto evaluation = fitness_func(std::cref(population));
 
         // selection weighted on fitness
         auto selection = weighted_random_sample(evaluation, pop_size);

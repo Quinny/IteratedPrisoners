@@ -16,7 +16,7 @@ struct score_compare {
 
 void ev_against_classic() {
     using namespace ipd;
-    auto ev_guy   = genetic::evolve(100, 30, 10);
+    auto ev_guy   = genetic::evolve(1000, 2, 30, genetic::evaluate_vs_tft);
     auto cp       = bots::all;
     cp.push_back(ev_guy);
 
@@ -55,8 +55,8 @@ void winner_battle() {
 
 int main() {
     qp::profiler p("entire thing");
-    //ev_against_classic();
-    winner_battle();
+    ev_against_classic();
+    //winner_battle();
     std::cout << "--------" << std::endl;
     p.stop();
     qp::profiler::dump();

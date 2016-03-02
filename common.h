@@ -7,6 +7,7 @@
 #include <vector>
 #include <future>
 #include <iostream>
+#include <algorithm>
 
 namespace ipd {
 
@@ -86,6 +87,10 @@ int total_score(const prisoner_t& p, const std::vector<prisoner_t>& ps, int n) {
     return score;
 }
 
+bool score_compare(const score_t& x, const score_t& y) {
+    return x.second > y.second;
+}
+
 std::vector<std::pair<prisoner_t, int>>
 play_tourny(const std::vector<prisoner_t>& players, int n) {
     std::vector<std::pair<prisoner_t, int>> ret;
@@ -93,6 +98,7 @@ play_tourny(const std::vector<prisoner_t>& players, int n) {
         auto score = total_score(p1, players, n);
         ret.push_back({p1, score});
     }
+    std::sort(ret.begin(), ret.end(), score_compare);
     return ret;
 }
 

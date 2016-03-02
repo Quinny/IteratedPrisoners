@@ -8,11 +8,10 @@
 #include "genetic.h"
 #include "profile.h"
 
-struct score_compare {
-    bool operator () (const ipd::score_t& x, const ipd::score_t& y) const {
-        return x.second > y.second;
-    }
-};
+void log(const ipd::prisoner_t& p, int score) {
+    std::fstream f("winners.txt", std::ios_base::app);
+    f << p << " " << score << std::endl;
+}
 
 void ev_against_classic() {
     using namespace ipd;
@@ -21,14 +20,10 @@ void ev_against_classic() {
     cp.push_back(ev_guy);
 
     auto sb = play_tourny(cp, 100);
-    std::sort(sb.begin(), sb.end(), score_compare());
-
     for (auto i: sb)
         std::cout << i << std::endl;
 
-    // append winner to a text file for later analysis
-    std::fstream f("winners.txt", std::ios_base::app);
-    f << sb.front().first << " " << sb.front().second << std::endl;
+    log(sb.front().first, sb.front().second);
 }
 
 void winner_battle() {
@@ -44,21 +39,27 @@ void winner_battle() {
             make_prisoner_t(genetic::genetic_strategy(genome))
         );
 
-    for (const auto& i: bots::all)
-        winners.push_back(i);
-
     auto sb = play_tourny(winners, 100);
-    std::sort(sb.begin(), sb.end(), score_compare());
     for (auto i: sb)
         std::cout << i.first << ", " << i.second << std::endl;
 }
 
+double average_using(ipd::genetic::fitness_fn fn, int n) {
+    double total = 0;
+    for (int i = 0; i < n; ++i) {
+        auto guy = ipd::genetic::evolve(1000, 2, 100, fn);
+        auto score = ipd::total_score(guy, ipd::bots::all, 100);
+        total += score;
+        log(guy, score);
+    }
+    return total / n;
+}
+
 int main() {
-    qp::profiler p("entire thing");
-    ev_against_classic();
-    //winner_battle();
-    std::cout << "--------" << std::endl;
-    p.stop();
-    qp::profiler::dump();
+    auto a1 = average_using(ipd::genetic::evaluate_async, 100);
+    std::cout << "multibot eval average " << a1 << std::endl;
+
+    auto a2 = average_using(ipd::genetic::evaluate_vs_tft, 100);
+    std::cout << "single tft bot eval average " << a2 << std::endl;
     return 0;
 }

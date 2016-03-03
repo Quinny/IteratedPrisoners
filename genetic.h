@@ -49,7 +49,9 @@ struct genetic_strategy {
     // Construct a strategy given a genome string
     genetic_strategy(const std::string& genome) :
         strategy(genome.size()),
-        mem_size(std::log(genome.size()) / std::log(4))
+        mem_size(
+            std::ceil(std::log(genome.size()) / std::log(4))
+        )
     {
         // converts a character to a decision
         auto f = [] (char c) {

@@ -15,3 +15,7 @@
 
 - Fitness function performance vs tit for tat bot did very well
 - Seems to be able to defend against defect bots well
+
+- Fitness function vs tft and vs all bots gives very similar
+    performance (on average almost exactly the same)
+- tft runs much faster and gives opportunity to run more tests

@@ -12,7 +12,7 @@ def test_files():
 
 def run(f):
     print "Running " + f
-    os.system("g++ -std=c++11 " + f)
+    os.system("g++ -std=c++11 -pthread " + f)
     os.system("./a.out")
     print ""
 

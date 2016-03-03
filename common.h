@@ -91,7 +91,7 @@ bool score_compare(const score_t& x, const score_t& y) {
     return x.second > y.second;
 }
 
-std::vector<std::pair<prisoner_t, int>>
+std::vector<score_t>
 play_tourny(const std::vector<prisoner_t>& players, int n) {
     std::vector<std::pair<prisoner_t, int>> ret;
     for (auto p1: players) {

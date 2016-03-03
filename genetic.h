@@ -11,6 +11,7 @@
 #include "common.h"
 #include "bots.h"
 #include "profile.h"
+#include "config.h"
 
 namespace ipd {
 
@@ -172,7 +173,7 @@ std::vector<score_t> evaluate_async(const std::vector<prisoner_t>& v) {
     qp::profiler fit_prof("fitness evaluation");
     std::vector<std::future<int>> futs;
     std::vector<score_t> ret(v.size());
-    auto fitness = std::bind(total_score, _1, bots::all, 64);
+    auto fitness = std::bind(total_score, _1, bots::all, ipd::config::rounds);
 
     for (const auto& i: v) {
         futs.emplace_back(std::async(fitness, i));
@@ -207,7 +208,7 @@ std::vector<score_t> evaluate_vs_tft(const std::vector<prisoner_t>& v) {
     std::vector<score_t> ret;
     prisoner_t tft = {"", bots::tft};
     for (const auto& i: v)
-        ret.emplace_back(i, play(i, tft, 64));
+        ret.emplace_back(i, play(i, tft, ipd::config::rounds));
     return ret;
 }
 
@@ -245,7 +246,8 @@ using fitness_fn = std::function<
 >;
 prisoner_t evolve(int pop_size, int mutation_rate, int generations,
         fitness_fn fitness_func) {
-    auto population = initial_population(pop_size, 3, 3);
+    auto population = initial_population(
+            pop_size, ipd::config::mem_first, ipd::config::mem_last);
     auto mutate     = std::bind(mutate_strategy, _1, mutation_rate);
 
     for (int i = 0; i < generations; ++i) {
@@ -272,9 +274,10 @@ prisoner_t evolve(int pop_size, int mutation_rate, int generations,
     }
 
     prisoner_t best = population.front();
-    int best_score = total_score(best, bots::all, 100);
+    int best_score = total_score(best, bots::all, ipd::config::rounds);
     for (auto i = 1UL; i < population.size(); ++i) {
-        auto score = total_score(population[i], bots::all, 100);
+        auto score = total_score(
+                population[i], bots::all, ipd::config::rounds);
         if (score > best_score) {
             best = population[i];
             best_score = score;

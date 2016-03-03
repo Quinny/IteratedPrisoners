@@ -273,17 +273,10 @@ prisoner_t evolve(int pop_size, int mutation_rate, int generations,
             population.push_back(make_prisoner_t(genetic_strategy(i)));
     }
 
-    prisoner_t best = population.front();
-    int best_score = total_score(best, bots::all, 100);
-    for (auto i = 1UL; i < population.size(); ++i) {
-        auto score = total_score(population[i], bots::all, 100);
-        if (score > best_score) {
-            best = population[i];
-            best_score = score;
-        }
-    }
-
-    return best;
+    // final eval uses overall performance
+    auto evaluation = evaluate_async(std::cref(population));
+    std::sort(evaluation.begin(), evaluation.end(), score_compare);
+    return evaluation.front().first;
 }
 
 } // genetic namespace

@@ -7,6 +7,7 @@
 #include "bots.h"
 #include "genetic.h"
 #include "profile.h"
+#include "config.h"
 
 void log(const ipd::prisoner_t& p, int score) {
     std::fstream f("winners.txt", std::ios_base::app);
@@ -15,11 +16,16 @@ void log(const ipd::prisoner_t& p, int score) {
 
 void ev_against_classic() {
     using namespace ipd;
-    auto ev_guy   = genetic::evolve(1000, 2, 10, genetic::evaluate_vs_tft);
+    auto ev_guy   = genetic::evolve(
+        ipd::config::pop_size,
+        ipd::config::mutation_rate,
+        ipd::config::generations,
+        genetic::evaluate_vs_tft
+    );
     auto cp       = bots::all;
     cp.push_back(ev_guy);
 
-    auto sb = play_tourny(cp, 100);
+    auto sb = play_tourny(cp, ipd::config::rounds);
     for (auto i: sb)
         std::cout << i << std::endl;
 
@@ -39,7 +45,7 @@ void winner_battle() {
             make_prisoner_t(genetic::genetic_strategy(genome))
         );
 
-    auto sb = play_tourny(winners, 100);
+    auto sb = play_tourny(winners, ipd::config::rounds);
     for (auto i: sb)
         std::cout << i.first << ", " << i.second << std::endl;
 }
@@ -47,15 +53,24 @@ void winner_battle() {
 double average_using(ipd::genetic::fitness_fn fn, int n) {
     double total = 0;
     for (int i = 0; i < n; ++i) {
-        auto guy = ipd::genetic::evolve(1000, 2, 10, fn);
-        auto score = ipd::total_score(guy, ipd::bots::all, 100);
+        auto guy = ipd::genetic::evolve(
+            ipd::config::pop_size,
+            ipd::config::mutation_rate,
+            ipd::config::rounds,
+            fn
+        );
+        auto score = ipd::total_score(guy, ipd::bots::all, ipd::config::rounds);
         total += score;
         log(guy, score);
     }
     return total / n;
 }
 
-int main() {
-    ev_against_classic();
+int main(int argc, char* argv[]) {
+    ipd::config::load_config();
+    ipd::config::load_cmd_args(argc, argv);
+
+    auto a1 = average_using(ipd::genetic::evaluate_async, 1);
+    std::cout << "multibot eval average " << a1 << std::endl;
     return 0;
 }

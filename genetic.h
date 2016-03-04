@@ -50,7 +50,9 @@ struct genetic_strategy {
     // Construct a strategy given a genome string
     genetic_strategy(const std::string& genome) :
         strategy(genome.size()),
-        mem_size(std::log(genome.size()) / std::log(4))
+        mem_size(
+            std::ceil(std::log(genome.size()) / std::log(4))
+        )
     {
         // converts a character to a decision
         auto f = [] (char c) {
@@ -273,18 +275,10 @@ prisoner_t evolve(int pop_size, int mutation_rate, int generations,
             population.push_back(make_prisoner_t(genetic_strategy(i)));
     }
 
-    prisoner_t best = population.front();
-    int best_score = total_score(best, bots::all, ipd::config::rounds);
-    for (auto i = 1UL; i < population.size(); ++i) {
-        auto score = total_score(
-                population[i], bots::all, ipd::config::rounds);
-        if (score > best_score) {
-            best = population[i];
-            best_score = score;
-        }
-    }
-
-    return best;
+    // final eval uses overall performance
+    auto evaluation = evaluate_async(std::cref(population));
+    std::sort(evaluation.begin(), evaluation.end(), score_compare);
+    return evaluation.front().first;
 }
 
 } // genetic namespace

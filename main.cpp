@@ -70,7 +70,6 @@ int main(int argc, char* argv[]) {
     ipd::config::load_config();
     ipd::config::load_cmd_args(argc, argv);
 
-    auto a1 = average_using(ipd::genetic::evaluate_async, 1);
-    std::cout << "multibot eval average " << a1 << std::endl;
+    ev_against_classic();
     return 0;
 }

@@ -17,24 +17,31 @@ namespace config {
     int mutation_rate;  // Probability of their being a mutation (in %age)
     int generations;    // Number of generations used in the genetic algorithm
 
+    // Returns a function which sets the specified setting
+    using setter_fn = std::function<void(int)>;
+    setter_fn setter_for(int& x) {
+        return [&] (int y) {
+            x = y;
+        };
+    }
+
     // This maps strings or argument names to functions which update
     // the appropriate constants in the config.
-    std::unordered_map<std::string, std::function<void(int)>> config_map{
+    std::unordered_map<std::string, setter_fn> config_map{
         // Mappings for conf file
-        {"rounds", [](int n) { rounds = n; }},
-        {"mem_first", [](int n) { mem_first = n; }},
-        {"mem_last", [](int n) { mem_last = n; }},
-        {"pop_size", [](int n) { pop_size = n; }},
-        {"mutation_rate", [](int n) { mutation_rate = n; }},
-        {"generations", [](int n) { generations = n; }},
+        {"rounds",        setter_for(rounds) },
+        {"mem_first",     setter_for(mem_first) },
+        {"mem_last",      setter_for(mem_last) },
+        {"pop_size",      setter_for(pop_size) },
+        {"mutation_rate", setter_for(mutation_rate) },
+        {"generations",   setter_for(generations) },
 
-        // Mappings for command line arguments
-        {"-r", [](int n) { rounds = n;}},
-        {"-mf", [](int n) { mem_first = n; }},
-        {"-ml", [](int n) { mem_last = n; }},
-        {"-p", [](int n) { pop_size = n; }},
-        {"-m", [](int n) { mutation_rate = n; }},
-        {"-g", [](int n) { generations = n; }}
+        {"-r",  setter_for(rounds) },
+        {"-mf", setter_for(mem_first) },
+        {"-ml", setter_for(mem_last) },
+        {"-p",  setter_for(pop_size) },
+        {"-m",  setter_for(mutation_rate) },
+        {"-g",  setter_for(generations) }
     };
 
     // Given a line from the config file, return the name value pair

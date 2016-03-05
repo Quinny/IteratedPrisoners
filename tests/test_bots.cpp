@@ -1,5 +1,5 @@
 #include "test.h"
-#include "../bots.h"
+#include "../ipd/bots.h"
 
 using namespace ipd;
 

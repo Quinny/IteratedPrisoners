@@ -3,11 +3,11 @@
 #include <chrono>
 #include <iterator>
 
-#include "common.h"
-#include "bots.h"
-#include "genetic.h"
-#include "profile.h"
-#include "config.h"
+#include "ipd/common.h"
+#include "ipd/bots.h"
+#include "ipd/genetic.h"
+#include "ipd/profile.h"
+#include "ipd/config.h"
 
 void log(const ipd::prisoner_t& p, int score) {
     std::fstream f("winners.txt", std::ios_base::app);

@@ -1,8 +1,8 @@
 #include <vector>
 
 #include "test.h"
-#include "../common.h"
-#include "../bots.h"
+#include "../ipd/common.h"
+#include "../ipd/bots.h"
 
 using namespace ipd;
 

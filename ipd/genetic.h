@@ -19,6 +19,7 @@ namespace genetic {
 
 using namespace std::placeholders;
 
+// generate a random cooperate or defect
 decision random_decision() {
     static std::uniform_int_distribution<int> dist(0, 1);
     static std::knuth_b gen (std::time(nullptr));
@@ -29,6 +30,7 @@ decision random_decision() {
     return decision::defect;
 }
 
+// generate a random integral in the range [first, last]
 template <typename T>
 T random_range(T first, T last) {
     static std::knuth_b gen (std::time(nullptr));
@@ -102,6 +104,8 @@ struct genetic_strategy {
     }
 };
 
+// Build a genome string representing tit for tat of memory
+// size 3
 std::string tft_genome(int mem_size) {
     int limit = std::pow(mem_size, 4);
     std::string genome = "c";
@@ -171,6 +175,8 @@ std::vector<prisoner_t> initial_population(std::size_t n,
     return ret;
 }
 
+// Evaluate fitness of priosners based on performance against
+// pre-defined bots
 std::vector<score_t> evaluate_async(const std::vector<prisoner_t>& v) {
     qp::profiler fit_prof("fitness evaluation");
     std::vector<std::future<int>> futs;
@@ -188,6 +194,7 @@ std::vector<score_t> evaluate_async(const std::vector<prisoner_t>& v) {
     return ret;
 }
 
+// hamming distance between two strings
 int hamming_distance(const std::string& s1, const std::string& s2) {
     int ret = 0;
     for (auto i = 0UL; i < s1.size(); ++i) {
@@ -197,15 +204,16 @@ int hamming_distance(const std::string& s1, const std::string& s2) {
     return ret;
 }
 
+// evaluate based on hamming distance to tft genome
 std::vector<score_t> evaluate_tft_dist(const std::vector<prisoner_t>& v, int size) {
     std::vector<score_t> ret;
     for (const auto& i: v) {
-        ret.emplace_back(i,
-                i.name.size() - hamming_distance(i.name, tft_genome(size)));
+        ret.emplace_back(i, i.name.size() - hamming_distance(i.name, tft_genome(size)));
     }
     return ret;
 }
 
+// evaluate based on performance against tft bot
 std::vector<score_t> evaluate_vs_tft(const std::vector<prisoner_t>& v) {
     std::vector<score_t> ret;
     prisoner_t tft = {"", bots::tft};
@@ -214,9 +222,11 @@ std::vector<score_t> evaluate_vs_tft(const std::vector<prisoner_t>& v) {
     return ret;
 }
 
+// randomly mutate the strategy by potentatially changing each of
+// its elements at a given rate
 std::string mutate_strategy(std::string s, const int rate) {
     auto maybe_change = [&] (const char c) {
-        if (random_range(0, 100) < rate) {
+        if (random_range(0, 100) <= rate) {
             auto d = random_decision();
             if (d == decision::defect) return 'd';
             return 'c';

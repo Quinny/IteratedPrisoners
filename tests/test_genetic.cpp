@@ -1,7 +1,7 @@
 #include <algorithm>
 
 #include "test.h"
-#include "../genetic.h"
+#include "../ipd/genetic.h"
 
 using namespace ipd;
 using namespace ipd::genetic;

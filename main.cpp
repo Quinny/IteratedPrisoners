@@ -8,6 +8,7 @@
 #include "ipd/genetic.h"
 #include "ipd/profile.h"
 #include "ipd/config.h"
+#include "ipd/hill_climb.h"
 
 void log(const ipd::prisoner_t& p, int score) {
     std::fstream f("winners.txt", std::ios_base::app);
@@ -30,6 +31,23 @@ void ev_against_classic() {
         std::cout << i << std::endl;
 
     log(sb.front().first, sb.front().second);
+}
+
+void hill_against_classic() {
+    using namespace ipd;
+    auto hill_guy = hill_climb::climb(
+        make_prisoner_t(genetic::genetic_strategy(3)),
+        config::mutation_rate,
+        genetic::evaluate_vs_tft
+    );
+    auto cp       = bots::all;
+    cp.push_back(hill_guy);
+
+    auto sb = play_tourny(cp, ipd::config::rounds);
+    for (auto i: sb)
+        std::cout << i << std::endl;
+
+    //log(sb.front().first, sb.front().second);
 }
 
 void winner_battle() {
@@ -70,6 +88,7 @@ int main(int argc, char* argv[]) {
     ipd::config::load_config();
     ipd::config::load_cmd_args(argc, argv);
 
-    ev_against_classic();
+    //ev_against_classic();
+    hill_against_classic();
     return 0;
 }

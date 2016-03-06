@@ -1,0 +1,7 @@
+- naive hill climbing performs horribly
+    - generate n successors from random mutations
+    - evaluate each based on fitness
+    - pick the best one
+    - if its no better than the one we started with break
+    - otherwise move to the best and continue
+- prisoner created performs poorly

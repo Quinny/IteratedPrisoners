@@ -104,8 +104,7 @@ struct genetic_strategy {
     }
 };
 
-// Build a genome string representing tit for tat of memory
-// size 3
+// Build a genome string representing tit for tat of given memory size
 std::string tft_genome(int mem_size) {
     int limit = std::pow(mem_size, 4);
     std::string genome = "c";
@@ -205,10 +204,15 @@ int hamming_distance(const std::string& s1, const std::string& s2) {
 }
 
 // evaluate based on hamming distance to tft genome
-std::vector<score_t> evaluate_tft_dist(const std::vector<prisoner_t>& v, int size) {
+std::vector<score_t> evaluate_tft_dist(const std::vector<prisoner_t>& v) {
     std::vector<score_t> ret;
     for (const auto& i: v) {
-        ret.emplace_back(i, i.name.size() - hamming_distance(i.name, tft_genome(size)));
+        std::size_t msize = std::ceil(
+            std::log(i.name.size()) / std::log(4)
+        );
+        ret.emplace_back(i, i.name.size() - hamming_distance(
+                    i.name, tft_genome(msize)
+        ));
     }
     return ret;
 }

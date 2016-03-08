@@ -12,7 +12,14 @@
 \usepackage{longtable}
 \usepackage[T1]{fontenc}
 \usepackage{tocloft}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue
+}
 \renewcommand\cftsecleader{\cftdotfill{\cftdotsep}}
+\setlength\parindent{0pt}
 
 
 \begin{document}
@@ -33,11 +40,53 @@ consistently breed well performing prisoners.
 A hill climbing approach was then taken,
 which proved to be ineffective at producing a competitive strategy given the
 lack of a natural successor function. Finally, machine learning... <INSERT
-SUMMARY HERE>.
+SUMMARY HERE>.  The source code used for this study can be found in the final
+section of this paper.
 
 \pagebreak
 
 \section{Introduction}
+The Iterated Prisoner's Dilemma is a classic example of game theory which demonstrates
+that two agents acting for their own self interest may not result in an
+optimal outcome for either agent.  The prisoner's
+dilemma is as follows: \\ \\
+Two individuals (herein Bob and Alice) have been arrested and placed in solitary
+confinement so that they may not communicate with one another.  Each of them hope
+to spend the least amount of time in prison.  The prosecutor approaches them
+and offers the following deal:
+\begin{itemize}
+    \item If Bob and Alice betray (herein defect) each other, they will
+        both serve 2 years in prison
+    \item If Bob defects but Alice remains silent (herein cooperate), Bob
+        will be set free and Alice will spend 3 years in prison (and vice versa)
+    \item If Bob and Alice both cooperate they will each spend 1 year in prison
+        on a lesser charge \\
+\end{itemize}
+
+The iterated version of the prisoner's dilemma is simply a sequence of rounds of
+the above mentioned game.  A player's score is the summation of their score in
+each round. \\
+
+It is implied that Bob and Alice will have no interactions with each other after
+their decisions and thus cannot punish/reward their accomplice. If Bob and Alice are
+both rational and self centered then they will both choose to defect, as defecting
+yields the highest probability of a favourable outcome.  It is interesting to note
+that if the prisoners act non-rationally and choose to cooperate
+(the "riskier" option) they will spend 1/3 of the time in prison compared
+to the rational option. \\
+
+Taking after J. Golbeck (cite this?) the payoff matrix for this study has been
+inverted such that a higher score implies a lesser sentence. \\
+
+\begin{center}
+\begin{tabular}{l | c | c}
+     & Cooperate & Defect \\
+    \hline
+    Cooperate & (3,3) & (5, 0)\\ 
+    \hline
+    Defect & (0, 5) & (1,1) \\
+\end{tabular}
+\end{center}
 
 \pagebreak
 
@@ -59,5 +108,16 @@ SUMMARY HERE>.
 \pagebreak
 
 \section{Machine Learning}
+
+\pagebreak
+
+\section{Conclusion}
+
+\pagebreak
+
+\section{Source Code}
+All source code for this study was written in C++ and is
+available on
+\href{https://github.com/Quinny/IteratedPrisoners}{Github}
 
 \end{document}

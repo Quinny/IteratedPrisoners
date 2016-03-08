@@ -68,27 +68,11 @@ void winner_battle() {
         std::cout << i.first << ", " << i.second << std::endl;
 }
 
-double average_using(ipd::genetic::fitness_fn fn, int n) {
-    double total = 0;
-    for (int i = 0; i < n; ++i) {
-        auto guy = ipd::genetic::evolve(
-            ipd::config::pop_size,
-            ipd::config::mutation_rate,
-            ipd::config::rounds,
-            fn
-        );
-        auto score = ipd::total_score(guy, ipd::bots::all, ipd::config::rounds);
-        total += score;
-        log(guy, score);
-    }
-    return total / n;
-}
-
 int main(int argc, char* argv[]) {
     ipd::config::load_config();
     ipd::config::load_cmd_args(argc, argv);
 
-    //ev_against_classic();
-    hill_against_classic();
+    ev_against_classic();
+    //hill_against_classic();
     return 0;
 }

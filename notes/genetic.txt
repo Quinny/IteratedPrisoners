@@ -19,3 +19,22 @@
 - Fitness function vs tft and vs all bots gives very similar
     performance (on average almost exactly the same)
 - tft runs much faster and gives opportunity to run more tests
+
+
+
+- Effects of changing population size v.s. generation size
+* over 100 trials
+============================================================
+
+generations = 10,   population = 10 => average 2289.67
+generations = 100,  population = 10 => average 2254.17
+generations = 1000, population = 10 => average 2274.19
+
+------------------------------------------------------
+
+generations = 10, population = 10   => average 2244.92
+generations = 10, population = 100  => average 2538.21
+generations = 10, population = 1000 => average 2629.73
+
+Increasing population size is more effective than increasing generations
+

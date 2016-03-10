@@ -109,7 +109,19 @@ algorithms throughout this paper.
 Each genetic prisoner's strategy is represented as a vector of size
 $4^n$ where $n$ is the amount of moves the prisoner keeps in memory.  The
 prisoner's move is then calculated by encoding the last $n$ rounds of the game
-into an integer and indexing the strategy vector.
+into an integer and indexing the strategy vector. \\
+
+For example if Bob has
+a memory size of one, a possible strategy vector would be
+$S_B = [C, C, D, C]$.  If in the previous round Bob cooperated and Alice defected,
+the corresponding history string would be represented as $DC$.
+The history string is then
+marshalled into a base two integer by changing Defections to 0's and Cooperations
+to 1's, yielding $01$.  The strategy vector is then indexed at the base
+10 representation giving ${S_B}_1 = C$, thus Bob will Cooperate. \\
+
+All examples below use a memory size of three as it was observed to produce the
+best results (see observations section \textit{\ref{observations}}).
 
 \subsection{Initial Population}
 \subsection{Fitness Function}
@@ -130,6 +142,7 @@ into an integer and indexing the strategy vector.
 \pagebreak
 
 \section{Observations}
+\label{observations}
 
 \pagebreak
 

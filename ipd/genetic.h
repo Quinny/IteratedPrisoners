@@ -131,6 +131,12 @@ prisoner_t make_prisoner_t(const genetic_strategy& gs) {
     return {name, gs};
 }
 
+// Return a randomly generated prisoner_t object
+prisoner_t random_prisoner_t(std::size_t first, std::size_t last) {
+    int mem_size = random_range(first, last);
+    return make_prisoner_t(genetic_strategy(mem_size));
+}
+
 // returns a weighted random sample of v.  The weight of each element
 // is represented by the int in the pair.  It is based on the following
 // idea:
@@ -291,7 +297,7 @@ prisoner_t evolve(int pop_size, int mutation_rate, int generations,
 
     // final eval uses overall performance
     auto evaluation = evaluate_async(std::cref(population));
-    std::sort(evaluation.begin(), evaluation.end(), score_compare);
+    std::sort(evaluation.begin(), evaluation.end(), sort_compare);
     return evaluation.front().first;
 }
 

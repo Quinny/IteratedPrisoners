@@ -43,7 +43,7 @@ prisoner_t climb(prisoner_t init, const int rate,
 
         auto evaluation = fitness_func(succ);
         auto m = std::max_element(evaluation.begin(), evaluation.end(),
-                score_compare);
+                std::less<score_t>());
 
         // best guy was initial guy
         if (m->first.name == init.name)
@@ -69,7 +69,7 @@ prisoner_t restart_climb(
     } while (restarts > 0);
 
     auto eval = fitness_func(candidates);
-    auto max = std::max_element(eval.begin(), eval.end(), score_compare);
+    auto max = std::max_element(eval.begin(), eval.end(), std::less<score_t>());
     return max->first;
 }
 

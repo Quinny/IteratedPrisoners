@@ -87,12 +87,12 @@ int total_score(const prisoner_t& p, const std::vector<prisoner_t>& ps, int n) {
     return score;
 }
 
-bool sort_compare(const score_t& x, const score_t& y) {
-    return x.second > y.second;
+bool operator < (const score_t& x, const score_t& y) {
+    return x.second < y.second;
 }
 
-bool score_compare(const score_t& x, const score_t& y) {
-    return x.second < y.second;
+bool operator > (const score_t& x, const score_t& y) {
+    return x.second > y.second;
 }
 
 std::vector<score_t>
@@ -102,7 +102,7 @@ play_tourny(const std::vector<prisoner_t>& players, int n) {
         auto score = total_score(p1, players, n);
         ret.push_back({p1, score});
     }
-    std::sort(ret.begin(), ret.end(), sort_compare);
+    std::sort(ret.begin(), ret.end(), std::greater<score_t>());
     return ret;
 }
 

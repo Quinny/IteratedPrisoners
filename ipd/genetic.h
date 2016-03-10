@@ -297,7 +297,7 @@ prisoner_t evolve(int pop_size, int mutation_rate, int generations,
 
     // final eval uses overall performance
     auto evaluation = evaluate_async(std::cref(population));
-    std::sort(evaluation.begin(), evaluation.end(), sort_compare);
+    std::sort(evaluation.begin(), evaluation.end(), std::greater<score_t>());
     return evaluation.front().first;
 }
 

@@ -18,15 +18,15 @@ void log(const ipd::prisoner_t& p, int score) {
 void ev_against_classic() {
     using namespace ipd;
     auto ev_guy   = genetic::evolve(
-        ipd::config::pop_size,
-        ipd::config::mutation_rate,
-        ipd::config::generations,
+        config::pop_size,
+        config::mutation_rate,
+        config::generations,
         genetic::evaluate_vs_tft
     );
     auto cp       = bots::all;
     cp.push_back(ev_guy);
 
-    auto sb = play_tourny(cp, ipd::config::rounds);
+    auto sb = play_tourny(cp, config::rounds);
     for (auto i: sb)
         std::cout << i << std::endl;
 
@@ -43,11 +43,29 @@ void hill_against_classic() {
     auto cp       = bots::all;
     cp.push_back(hill_guy);
 
-    auto sb = play_tourny(cp, ipd::config::rounds);
+    auto sb = play_tourny(cp, config::rounds);
     for (auto i: sb)
         std::cout << i << std::endl;
 
     //log(sb.front().first, sb.front().second);
+}
+
+void restart_hill_against_classic(int restarts) {
+    using namespace ipd;
+    auto hill_guy = hill_climb::restart_climb(
+        genetic::random_prisoner_t(config::mem_first, config::mem_last),
+        config::mutation_rate,
+        genetic::evaluate_vs_tft,
+        restarts
+    );
+    auto cp = bots::all;
+    cp.push_back(hill_guy);
+
+    auto sb = play_tourny(cp, config::rounds);
+    for (auto i: sb)
+        std::cout << i << std::endl;
+
+    // log(sb.front().first, sb.front().second);
 }
 
 void winner_battle() {
@@ -74,5 +92,6 @@ int main(int argc, char* argv[]) {
 
     ev_against_classic();
     //hill_against_classic();
+    //restart_hill_against_classic(1000);
     return 0;
 }

@@ -84,20 +84,33 @@ the payoff matrix for this study has been
 inverted such that a higher score implies a lesser sentence. \\
 
 \begin{center}
-\begin{tabular}{l | c | c}
-     & Cooperate & Defect \\
-    \hline
-    Cooperate & (3,3) & (5, 0)\\
-    \hline
-    Defect & (0, 5) & (1,1) \\
-\end{tabular}
+    \begin{tabular}{l | c | c}
+         & Cooperate & Defect \\
+        \hline
+        Cooperate & (3,3) & (5, 0)\\
+        \hline
+        Defect & (0, 5) & (1,1) \\ \\
+    \end{tabular}
 \end{center}
 
+Iterated prisoner's dilemma strategies have been widely studied, and many have
+concluded that Tit for tat (herein TFT) produces the best average performance.
+TFT is extremely simple: Cooperate on the first turn, mirror the opponents
+last move thereafter.  TFT is effective because it capitalizes on mutual
+cooperation, but is also able to defend itself against rouge defectors.  These
+two qualities are extremely important and were kept in mind when designing the
+algorithms throughout this paper.
+\clearpage
 \pagebreak
 
 \section{Genetic Algorithm}
 
 \subsection{Representation}
+Each genetic prisoner's strategy is represented as a vector of size
+$4^n$ where $n$ is the amount of moves the prisoner keeps in memory.  The
+prisoner's move is then calculated by encoding the last $n$ rounds of the game
+into an integer and indexing the strategy vector.
+
 \subsection{Initial Population}
 \subsection{Fitness Function}
 \subsection{Selection}

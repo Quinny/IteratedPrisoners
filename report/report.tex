@@ -13,6 +13,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{tocloft}
 \usepackage{hyperref}
+\usepackage[none]{hyphenat}
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
@@ -124,7 +125,57 @@ All examples below use a memory size of three as it was observed to produce the
 best results (see observations section \textit{\ref{observations}}).
 
 \subsection{Initial Population}
+The initial population was a pool of prisoners having completely randomized
+strategy vectors.  The population size was variable, and the effects of varying
+sizes are explained in the observations section <OR SHOULD THAT BE HERE?>.
+
 \subsection{Fitness Function}
+
+Three different fitness functions were used to evaluate a prisoners performance.
+A description of each as well as performance comparisons follow.
+
+\pagebreak
+\subsubsection{Score Against Diverse Opponents}
+The prisoner being evaluated would play 100 rounds against a selection of 9
+strategies which were thought to be a uniform representation of all possible
+strategies.  Total score was calculated and used as a performance grade.
+The nine strategies were:
+\begin{enumerate}
+    \item All C - Always cooperate
+    \item All D - Always defect
+    \item Tit for Tat - Cooperate first move, mirror opponents last move thereafter
+    \item Suspicious Tit for Tat - Defect first move, mirror opponents last move
+        thereafter
+    \item Tit for 2 Tat - Cooperate first two moves, only cooperate if the
+        opponent did not defect twice in a row thereafter
+    \item Suspicious Tit for 2 Tat - Defect first two moves, only cooperate if the
+        opponent did not defect twice in a row thereafter
+    \item Grudger - Cooperate until the opponent defects, then defect without mercy
+    \item Sucker - Defect until the opponent cooperates, then cooperate foolishly
+    \item Hesitant - Only cooperate if the opponent has cooperated twice in a row
+\end{enumerate}
+
+From a shallow point of view this method of evaluating fitness was mostly
+successful.  After some contemplation it was decided that the
+9 strategies used were slightly biased towards those which tend to cooperate. 
+This left some the prisoners produced vulnerable to rouge defectors,
+and thus sub-optimal.
+
+\subsubsection{Hamming Distance From TFT Genome}
+The prisoner would be evaluated based on the hamming distance
+\footnote
+{\href{https://en.wikipedia.org/wiki/Hamming_distance}{Hamming distance}}
+between its current strategy vector and the strategy vector representing 
+the TFT genome.  This obviously had a tendancy to produce prisoners which
+acted increasingly similar to TFT.  Although the performance of said bots
+was sound, this method did not produce any extraordinary or new strategies.
+
+\subsubsection{Score Against TFT}
+
+The prisoner would be evaluated based on its score after 100 rounds against
+TFT.  This method seemed to produce both the best results with the least
+amount of computation.
+
 \subsection{Selection}
 \subsection{Cross Over}
 \subsection{Mutation}

@@ -14,6 +14,8 @@
 \usepackage{tocloft}
 \usepackage{hyperref}
 \usepackage[none]{hyphenat}
+\usepackage[]{algorithm2e}
+
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
@@ -106,11 +108,30 @@ algorithms throughout this paper.
 
 \section{Genetic Algorithm}
 
+The genetic algorithm in this paper has a structure equivalent to: \\
+
+\begin{algorithm}[H]
+ \KwResult{An evolved genetic prisoner}
+ population = [] \;
+ \For{$i\leftarrow 1$ \KwTo $popSize$}{
+    Push(population, randomPrisoner())\;
+  }
+ \For{$g\leftarrow 1$ \KwTo $generation$}{
+  %read current\;
+  evaluation = EvaluateFitness(population)\;
+  selection  = WeightedRandomSample(evaluation)\;
+  cross      = CrossOver(selection)\;
+  population = Mutate(cross);
+ }
+ \KwRet{MaxFitness(population),}
+\end{algorithm}
+
 \subsection{Representation}
 Each genetic prisoner's strategy is represented as a vector of size
-$4^n$ where $n$ is the amount of moves the prisoner keeps in memory.  The
-prisoner's move is then calculated by encoding the last $n$ rounds of the game
-into an integer and indexing the strategy vector. \\
+$4^n$ where $n$ is the number of moves the prisoner keeps in memory.  This vector
+is thought of as the prisoner's "genome".
+The prisoner's move is then calculated by encoding the last $n$ rounds of the game
+into an integer and indexing the strategy vector at that point. \\
 
 For example if Bob has
 a memory size of one, a possible strategy vector would be
@@ -134,7 +155,6 @@ sizes are explained in the observations section <OR SHOULD THAT BE HERE?>.
 Three different fitness functions were used to evaluate a prisoners performance.
 A description of each as well as performance comparisons follow.
 
-\pagebreak
 \subsubsection{Score Against Diverse Opponents}
 The prisoner being evaluated would play 100 rounds against a selection of 9
 strategies which were thought to be a uniform representation of all possible
@@ -174,7 +194,7 @@ was sound, this method did not produce any extraordinary or new strategies.
 
 The prisoner would be evaluated based on its score after 100 rounds against
 TFT.  Since TFT is widely accepted as one of the best overall strategies it was
-decided that performance against it would be a suitable measure for performance.
+decided that performance against it would be a suitable benchmark.
 This method seemed to produce the best results with the least
 amount of computation time.  The prisoners produced behaved somewhat similarly
 to TFT but contained some genome sections which differed considerably.  The result
@@ -201,10 +221,6 @@ This selection method was modeled after Roulette-wheel selection via stochastic 
 \footnote{\href{http://arxiv.org/pdf/1109.3627.pdf}{Roulette-wheel selection}}
 but has been optimized for practical usage by reducing time and space complexities.
 
-\clearpage
-
-\pagebreak
-
 \subsection{Cross Over}
 
 The cross over process is trivially implemented.  Given two genomes $G_1, G_2$,
@@ -220,7 +236,10 @@ are also random.
 
 \subsection{Mutation}
 
-
+Mutating a genome is also straightforward.  Each gene of the genome is changed
+to a random decision $d = Rand \in [D, C]$ with a probability $p$.  Generally
+this value of $p$ is low (between 1 and 5 percent) to avoid creating unstable
+evolution while still introducing some element of randomness.
 
 \pagebreak
 

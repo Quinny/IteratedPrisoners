@@ -157,26 +157,45 @@ The nine strategies were:
 
 From a shallow point of view this method of evaluating fitness was mostly
 successful.  After some contemplation it was decided that the
-9 strategies used were slightly biased towards those which tend to cooperate. 
-This left some the prisoners produced vulnerable to rouge defectors,
+9 strategies used were slightly biased towards those which tend to cooperate.
+This left some of the prisoners produced vulnerable to rouge defectors,
 and thus sub-optimal.
 
 \subsubsection{Hamming Distance From TFT Genome}
 The prisoner would be evaluated based on the hamming distance
 \footnote
 {\href{https://en.wikipedia.org/wiki/Hamming_distance}{Hamming distance}}
-between its current strategy vector and the strategy vector representing 
-the TFT genome.  This obviously had a tendancy to produce prisoners which
+between its current strategy vector and the strategy vector representing
+the TFT genome.  This obviously had a tendency to produce prisoners which
 acted increasingly similar to TFT.  Although the performance of said bots
 was sound, this method did not produce any extraordinary or new strategies.
 
 \subsubsection{Score Against TFT}
 
 The prisoner would be evaluated based on its score after 100 rounds against
-TFT.  This method seemed to produce both the best results with the least
-amount of computation.
+TFT.  Since TFT is widely accepted as one of the best overall strategies it was
+decided that performance against it would be a suitable measure for performance.
+This method seemed to produce the best results with the least
+amount of computation time.  The prisoners produced behaved somewhat similarly
+to TFT but contained some genome sections which differed considerably.  The result
+is a prisoner which \textit{mostly} contains the desired qualities from TFT
+but also includes some routines which give it an advantage in certain situations.
+
+<INSERT GRAPHS AND COMPARISONS HERE>
 
 \subsection{Selection}
+
+After evaluating fitness (explained in the previous section) a pool of
+prisoners were selected to survive into the next generation.  This pool was
+selected using weighted random sampling.  In order to accomplish this, the
+discrete cumulative density function 
+\footnote{
+\href{https://en.wikipedia.org/wiki/Cumulative_distribution_function}{CDF}
+}
+(CDF, the sum of all of the fitness values)
+was calculated.
+
+
 \subsection{Cross Over}
 \subsection{Mutation}
 

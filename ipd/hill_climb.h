@@ -24,6 +24,13 @@ mutation_successor(const prisoner_t& p, const int rate) {
     return ret;
 }
 
+// Returns a new prisoner_t that is a mutation of the original
+prisoner_t mutate(const prisoner_t& p, const int rate) {
+    auto mutation = std::bind(genetic::mutate_strategy, _1, rate);
+    auto n = mutation(p.name);
+    return make_prisoner_t(genetic::genetic_strategy(n));
+}
+
 // TODO
 // potentially different selection function
 //      - add some randomness
@@ -51,6 +58,20 @@ prisoner_t climb(prisoner_t init, const int rate,
         init = m->first;
     }
 
+    return init;
+}
+
+int single_vs_tft(const prisoner_t& p) {
+    prisoner_t tft = {"", bots::tft};
+    return play(p, tft, config::rounds);
+}
+
+prisoner_t climb(prisoner_t init, const int rate, int rounds) {
+    for (int i = 0; i < rounds; ++i) {
+        auto succ = mutate(init, rate);
+        if (single_vs_tft(succ) > single_vs_tft(init))
+            init = succ;
+    }
     return init;
 }
 

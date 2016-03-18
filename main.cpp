@@ -38,7 +38,7 @@ void hill_against_classic() {
     auto hill_guy = hill_climb::climb(
         make_prisoner_t(genetic::genetic_strategy(3)),
         config::mutation_rate,
-        genetic::evaluate_vs_tft
+        config::hill_pop
     );
     auto cp       = bots::all;
     cp.push_back(hill_guy);
@@ -90,8 +90,8 @@ int main(int argc, char* argv[]) {
     ipd::config::load_config();
     ipd::config::load_cmd_args(argc, argv);
 
-    ev_against_classic();
-    //hill_against_classic();
+    //ev_against_classic();
+    hill_against_classic();
     //restart_hill_against_classic(1000);
     return 0;
 }

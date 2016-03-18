@@ -16,6 +16,7 @@ namespace config {
     int pop_size;       // Population size used in the genetic algorithm
     int mutation_rate;  // Probability of their being a mutation (in %age)
     int generations;    // Number of generations used in the genetic algorithm
+    int hill_pop;       // Number of candidates processes in hill-climbing
 
     // Returns a function which sets the specified setting
     using setter_fn = std::function<void(int)>;
@@ -35,13 +36,15 @@ namespace config {
         {"pop_size",      setter_for(pop_size) },
         {"mutation_rate", setter_for(mutation_rate) },
         {"generations",   setter_for(generations) },
+        {"hill_pop",      setter_for(hill_pop) },
 
         {"-r",  setter_for(rounds) },
         {"-mf", setter_for(mem_first) },
         {"-ml", setter_for(mem_last) },
         {"-p",  setter_for(pop_size) },
         {"-m",  setter_for(mutation_rate) },
-        {"-g",  setter_for(generations) }
+        {"-g",  setter_for(generations) },
+        {"-h",  setter_for(hill_pop) }
     };
 
     // Given a line from the config file, return the name value pair

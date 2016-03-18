@@ -38,3 +38,8 @@ generations = 10, population = 1000 => average 2629.73
 
 Increasing population size is more effective than increasing generations
 
+average after 100 rounds
+tft   - 2542.79
+multi - 2550.67
+hamm  - 2434.03
+

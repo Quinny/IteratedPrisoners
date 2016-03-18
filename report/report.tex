@@ -15,7 +15,7 @@
 \usepackage{hyperref}
 \usepackage[none]{hyphenat}
 \usepackage[]{algorithm2e}
-
+\usepackage{graphicx}
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
@@ -117,7 +117,6 @@ The genetic algorithm in this paper has a structure equivalent to: \\
     Push(population, randomPrisoner())\;
   }
  \For{$g\leftarrow 1$ \KwTo $generation$}{
-  %read current\;
   evaluation = EvaluateFitness(population)\;
   selection  = WeightedRandomSample(evaluation)\;
   cross      = CrossOver(selection)\;
@@ -142,8 +141,17 @@ marshalled into a base two integer by changing Defections to 0's and Cooperation
 to 1's, yielding $01$.  The strategy vector is then indexed at the base
 10 representation giving ${S_B}_1 = C$, thus Bob will Cooperate. \\
 
-All examples below use a memory size of three as it was observed to produce the
-best results (see observations section \textit{\ref{observations}}).
+All examples below use a memory size of three as it was observed to yield the
+highest average score seen in \hyperref[fig1]{figure 1}.
+
+\pagebreak
+
+\begin{figure}[h]
+    \caption{Graph of memory size vs average score over 100 games}
+    \centering
+    \includegraphics[scale=0.6]{figures/memsize-vs-score.png}
+    \label{fig1}
+\end{figure}
 
 \subsection{Initial Population}
 The initial population was a pool of prisoners having completely randomized
@@ -201,7 +209,24 @@ to TFT but contained some genome sections which differed considerably.  The resu
 is a prisoner which \textit{mostly} contains the desired qualities from TFT
 but also includes some routines which give it an advantage in certain situations.
 
-<INSERT GRAPHS AND COMPARISONS HERE>
+\clearpage
+\pagebreak
+
+\subsubsection{Fitness Function Comparison}
+
+\begin{figure}[h]
+    \label{fig2}
+    \caption{Graph of fitness function vs average score over 100 games}
+    \centering
+    \includegraphics[scale=0.5]{figures/fit_score.png}
+    \label{fig1}
+\end{figure}
+
+As evidenced by \hyperref[fig2]{figure 2} Score against TFT and Score Against Diverse
+produce very similar average scores (within 10 points).  The main difference
+between the two is that Score Against Diverse takes significantly longer to compute
+as it is pitting the prisoner against 9 others compared to just one by Score against TFT.
+For these two reasons Score against TFT is clearly the superior fitness function.
 
 \subsection{Selection}
 
@@ -214,7 +239,7 @@ discrete cumulative density function
 was calculated.  A random integer was then calculated as $p = Rand \in [0, CDF_n]$,
 and binary such was performed to find the first element in the cumulative CDF array that
 was greater than or equal to $p$.  The prisoner corresponding to this element
-is then added to the next generation.  This process is repeated $pop\_size$ times
+is then added to the next generation.  This process is repeated $popSize$ times
 and the next generation is formed. \\
 
 This selection method was modeled after Roulette-wheel selection via stochastic acceptance
@@ -230,29 +255,26 @@ to be used as the cross over point.  Two new genomes are then given as:\\
 $G'_1 = {G_1}_{[0,c)}{G_2}_{[c, length(G_2)]}$ and
 $G'_2 = {G_2}_{[0, c)}{G_1}_{[c, length(G_1)]}$ \\
 
+\begin{figure}[h]
+    \caption{Crossover example for genome size 4}
+    \centering
+    \includegraphics[scale=0.5]{figures/crossover-example.png}
+\end{figure}
+
 This cross over is applied to each adjacent pair of prisoners in the current
 generation.  Since the order of the prisoners is random it follows that the pairings
 are also random.
 
 \subsection{Mutation}
 
-Mutating a genome is also straightforward.  Each gene of the genome is changed
-to a random decision $d = Rand \in [D, C]$ with a probability $p$.  Generally
+The mutation phase is straightforward as well.  Each gene of the genome is changed
+to a random decision $d = Rand \in [C, D]$ with a probability of $p$.  Generally
 this value of $p$ is low (between 1 and 5 percent) to avoid creating unstable
 evolution while still introducing some element of randomness.
 
 \pagebreak
 
 \section{Hill Climbing}
-
-\pagebreak
-
-\section{Machine Learning}
-
-\pagebreak
-
-\section{Observations}
-\label{observations}
 
 \pagebreak
 

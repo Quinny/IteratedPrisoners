@@ -24,6 +24,8 @@
 \renewcommand\cftsecleader{\cftdotfill{\cftdotsep}}
 \setlength\parindent{0pt}
 
+\SetKwInput{KwInput}{Input}
+\SetKwInput{KwOutput}{Output}
 
 \begin{document}
 \maketitle
@@ -192,13 +194,14 @@ and thus sub-optimal.
 \subsubsection{Hamming Distance From TFT Genome}
 The prisoner would be evaluated based on the hamming distance
 \footnote
-{\href{https://en.wikipedia.org/wiki/Hamming_distance}{Hamming distance}}
+{\href{https://en.wikipedia.org/wiki/Hamming distance}{Hamming distance}}
 between its current strategy vector and the strategy vector representing
 the TFT genome.  This obviously had a tendency to produce prisoners which
 acted increasingly similar to TFT.  Although the performance of said bots
 was sound, this method did not produce any extraordinary or new strategies.
 
 \subsubsection{Score Against TFT}
+\label{tft}
 
 The prisoner would be evaluated based on its score after 100 rounds against
 TFT.  Since TFT is widely accepted as one of the best overall strategies it was
@@ -234,7 +237,7 @@ After evaluating fitness (explained in the previous section) a pool of
 prisoners were selected to survive into the next generation.  This pool was
 selected using weighted random sampling.  In order to accomplish this the
 discrete cumulative density function
-\footnote{\href{https://en.wikipedia.org/wiki/Cumulative_distribution_function}{CDF}}
+\footnote{\href{https://en.wikipedia.org/wiki/Cumulative distribution function}{CDF}}
 , in this case an array of the cumulative sums of each prisoner's fitness value,
 was calculated.  A random integer was then calculated as $p = Rand \in [0, CDF_n]$,
 and binary such was performed to find the first element in the cumulative CDF array that
@@ -266,6 +269,7 @@ generation.  Since the order of the prisoners is random it follows that the pair
 are also random.
 
 \subsection{Mutation}
+\label{mutation}
 
 The mutation phase is straightforward as well.  Each gene of the genome is changed
 to a random decision $d = Rand \in [C, D]$ with a probability of $p$.  Generally
@@ -276,7 +280,50 @@ evolution while still introducing some element of randomness.
 
 \section{Hill Climbing}
 
+The hill-climbing approach was able to recycle most of the same techniques that
+were used in the genetic algorithm. The prisoners have their strategy
+represented as a vector of size $4^n$, and iterative hill-climbing was used
+to improve upon an initial strategy.
+
+\subsection {Fitness Function}
+
+As the \textit{\hyperref[tft]{Score Against TFT}} proved to be the most simple
+and effective fitness function for usage in the genetic algorithm, it was
+chosen for use in the hill-climbing algorithms as well.
+
+\subsection {Successor Function}
+
+One of the problems with developing a successor function for the IPD is that
+there does not seem to be any "natural successor" for any given state (i.e
+there is no natural connection from one state to another). As such, successors
+must be generated randomly.\\
+
+For this reason, the \textit{\hyperref[mutation]{random mutation function}}
+used in the genetic algorithm was chosen as the successor function.
+
+\subsection {Implementation}
+
+The most simple hill-climbing algorithm has a structure equivalent to: \\
+
+\begin{algorithm}[H]
+ \KwInput{Prisoner init, Rounds rounds, Mutation Rate rate}
+ \KwOutput{A new improved prisoner}
+ \For{$i\leftarrow 1$ \KwTo $rounds$}{
+  $succ$ $\leftarrow$ mutate($init$, $rate$)\;
+  \If{fitness($succ$) > fitness({$init$})}{
+   $init$ $\leftarrow$ $succ$\;
+  }
+ }
+ \KwRet{$succ$}
+\end{algorithm}
+
 \pagebreak
+
+Due to the fact that there is no natural connection between any given states,
+the possibility of becoming stuck on a local maxima is eliminated. Rather than
+gradually increasing performance along a local curve, the successors are
+generated from everywhere on the curve. This allows for a simplistic algorithm
+that removes the necessity of random restarts.
 
 \section{Conclusion}
 

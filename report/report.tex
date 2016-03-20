@@ -216,7 +216,7 @@ As evidenced by \hyperref[fig2]{Figure 2} Score against TFT and Score Against Di
 produced very similar average scores (within 10 points).  The main difference
 between the two is that Score Against Diverse took significantly longer to compute
 since it is pitting the prisoner against nine others compared to just one by Score against TFT.
-For these two reasons Score against TFT is clearly the superior fitness function.
+For these two reasons, Score against TFT is clearly the superior fitness function.
 
 \subsection{Selection}
 
@@ -251,7 +251,7 @@ but has been optimized for practical usage by reducing time and space complexiti
 
 The cross over process is trivially implemented.  Given two genomes $G_1, G_2$,
 a random integer $c = Rand \in [0, min(length(G_1), length(G_2))]$ is generated
-to be used as the cross over point.  Two new genomes are then given as:\\
+and used as the cross over point.  Two new genomes are then given as:\\
 
 $G'_1 = {G_1}_{[0,c)}{G_2}_{[c, length(G_2)]}$ and
 $G'_2 = {G_2}_{[0, c)}{G_1}_{[c, length(G_1)]}$ \\
@@ -286,7 +286,7 @@ evolution while still introducing some element of randomness.
 \end{figure}
 
 While all other factors remain constant,
-varying population size has a greater effect on the score than varying the number
+varying population size has a greater effect on the score when compared to varying the number
 of generations in the evolution. As seen in the graph above, increasing the number
 of generations has almost no effect on score while increasing the population
 size shows a clear upward trend.  It is likely this phenomenon occurs because the genome
@@ -316,8 +316,8 @@ One of the main complications encountered when deriving a successor for any give
 is that there does not exist a natural relationship operator between two prisoners.
 As a consequence, successors must be determined using random mutation.  Using
 random mutation to compute successors completely nullifies the locality aspect
-of hill climb search as it introduces a high probability of moving to an entirely different
-section of the search space.  This loss of locality eliminates the usefulness of
+of the hill climbimg search as it introduces a high probability of moving to an entirely different
+section in the search space.  This loss of locality eliminates the usefulness of
 methods, such as random restarts and horizontal shoulder movements, which attempt to
 escape plateaus and local maxima.
 

@@ -36,14 +36,12 @@
 
 \section{Abstract}
 
-This paper explores the use of two Artificial Intelligence algorithms to
-create optimal strategies to compete in the Iterated Prisoner's Dilemma.  The
+This paper explores two Artificial Intelligence algorithms used
+to create optimal strategies to compete in the Iterated Prisoner's Dilemma. The
 study begins by examining the use of a genetic algorithm to breed the perfect
-prisoner.  Several different configurations and fitness functions were tested and
-the performance of each was contrasted.  The genetic algorithm was able to
+prisoner. This is achieved by contrasting the performance of a variety of different configurations and fitness functions.  The genetic algorithm was able to
 consistently breed well performing prisoners.
-A hill climbing approach was then taken,
-which proved to be ineffective at producing a competitive strategy given the
+A hill climbing approach was then taken, which proved to be ineffective at producing a competitive strategy given the
 lack of a natural successor function and no clear end goal.  The traits
 of a strong genome are explored and finally, the performance of the two methods are contrasted.
 
@@ -55,9 +53,9 @@ that two agents acting for their own self interest may not result in an
 optimal outcome for either agent.  The prisoner's
 dilemma is as follows: \\ \\
 Two individuals (herein Bob and Alice) have been arrested and placed in solitary
-confinement so that they may not communicate with one another.  Each of them hope
-to spend the least amount of time in prison.  The prosecutor approaches them
-and offers the following deal:
+confinement, meaning they may not communicate with one another.  Each of them hope
+to spend the least amount of time in prison. The prosecutor approaches them
+and offers them the following deal:
 \begin{itemize}
     \item If Bob and Alice betray (herein defect) each other, they will
         both serve 2 years in prison
@@ -68,15 +66,15 @@ and offers the following deal:
 \end{itemize}
 
 The iterated version of the prisoner's dilemma is simply a sequence of rounds of
-the above mentioned game.  A player's score is the summation of their score in
+the above mentioned game.  A player's resulting score is the summation of their score in
 each round. \\
 
 It is implied that Bob and Alice will have no interactions with each other after
-their decisions and thus cannot punish/reward their accomplice. If Bob and Alice are
-both rational and self centered then they will both choose to defect, as defecting
-yields the highest probability of a favourable outcome.  It is interesting to note
-that if the prisoners act non-rationally and choose to cooperate
-(the "riskier" option) they will spend 1/3 of the time in prison compared
+their decisions. Therefore, they cannot punish/reward their accomplice. If Bob and Alice are
+both rational and self centered individuals then they will both choose to defect, 
+as defecting yields the highest probability of a favourable outcome.
+It is interesting to note
+that if the prisoners act non-rationally and choose to cooperate, a "riskier" option, they will spend one third of the time in prison when compared
 to the rational option. \\
 
 Taking after J. Golbeck
@@ -97,7 +95,7 @@ inverted such that a higher score implies a lesser sentence. \\
 
 Iterated prisoner's dilemma strategies have been widely studied, and many have
 concluded that Tit-for-Tat (herein TFT) produces the best average performance.
-TFT is extremely simple: Cooperate on the first turn, mirror the opponents
+TFT is exceedingly simple: Cooperate on the first turn, mirror the opponents
 last move thereafter.  TFT is effective because it capitalizes on mutual
 cooperation, but is also able to defend itself against rogue defectors.  These
 two qualities are extremely important and were kept in mind when designing the
@@ -155,7 +153,7 @@ sizes are explained in \textit{\hyperref[vpg]{section 3.7}}
 \subsection{Fitness Function}
 
 Three different fitness functions were used to evaluate a prisoner's performance.
-A description of each as well as performance comparisons follow.
+A description of each, as well as their performance comparisons, follow.
 
 \subsubsection{Score Against Diverse Opponents}
 The prisoner being evaluated would play 100 rounds against a selection of nine
@@ -179,7 +177,7 @@ The nine strategies were:
 
 From a shallow point of view this method of evaluating fitness was mostly
 successful.  After some contemplation it was decided that the
-nine strategies used were slightly biased towards those which tend to cooperate.
+nine strategies used were slightly biased towards those which tended to cooperate.
 This left some of the prisoners produced vulnerable to rogue defectors,
 and thus sub-optimal.
 
@@ -196,13 +194,12 @@ was sound, this method did not produce any extraordinary or new strategies.
 \label{tft}
 
 The prisoner would be evaluated based on its score after 100 rounds against
-TFT.  Since TFT is widely accepted as one of the best overall strategies it was
+TFT.  Since TFT is widely accepted as one of the best overall strategies, it was
 decided that performance against it would be a suitable benchmark.
 This method seemed to produce the best results with the least
 amount of computation time.  The prisoners behaved somewhat similarly
-to TFT but contained some genome sections which differed considerably.  The result
-is a prisoner which \textit{mostly} contains the desired qualities from TFT
-but also includes some routines which give it an advantage in certain situations.
+to TFT but contained some genome sections which differed considerably.  The result was a prisoner which \textit{mostly} contained the desired qualities from TFT
+but also included some routines which gave it an advantage in certain situations.
 
 
 \subsubsection{Fitness Function Comparison}
@@ -216,24 +213,35 @@ but also includes some routines which give it an advantage in certain situations
 \end{figure}
 
 As evidenced by \hyperref[fig2]{Figure 2} Score against TFT and Score Against Diverse
-produce very similar average scores (within 10 points).  The main difference
-between the two is that Score Against Diverse takes significantly longer to compute
-as it is pitting the prisoner against nine others compared to just one by Score against TFT.
-For these two reasons Score against TFT is clearly the superior fitness function.
+produced very similar average scores (within 10 points).  The main difference
+between the two is that Score Against Diverse took significantly longer to compute
+since it is pitting the prisoner against nine others compared to just one by Score against TFT.
+For these two reasons, Score against TFT is clearly the superior fitness function.
 
 \subsection{Selection}
 
 After evaluating fitness (explained in the previous section) a pool of
-prisoners were selected to survive into the next generation.  This pool was
-selected using weighted random sampling.  In order to accomplish this the
-discrete cumulative density function (CDF)
+prisoners were selected to advance into the next generation.  This pool was
+determined using weighted random sampling. In order to accomplish this, an array
+was populated with the cumulative sums of each prisoner's fitness value.  This
+array represents the discrete cumulative density function (CDF)
 \footnote{\href{https://en.wikipedia.org/wiki/Cumulative distribution function}{CDF}}
-, in this case an array of the cumulative sums of each prisoner's fitness value,
-was calculated.  A random integer was then calculated as $p = Rand \in [0, CDF_n]$,
+of the fitness distribution.
+
+\begin{figure}[h]
+    \centering
+    \begin{tabular}{l l}
+        Evaluation: & $[(P_1, 5), (P_2, 9), (P_3, 3)]$ \\
+        CDF Array: & $[(P_1, 5), (P_2, 14), (P_3, 17)]$ \\
+    \end{tabular}
+    \caption{Example CDF Array Population}
+\end{figure}
+
+A random integer was then calculated as $p = Rand \in [0, CDF_n]$,
 and binary search was performed to find the first element in the CDF array that
 was greater than or equal to $p$.  The prisoner corresponding to this element
-is then added to the next generation.  This process is repeated $popSize$ times
-and the next generation is formed. \\
+is then added to the next generation.  This process is repeated $popSize$ times,
+forming the next generation. \\
 
 This selection method was modeled after Roulette-wheel selection via stochastic acceptance
 \footnote{\href{http://arxiv.org/pdf/1109.3627.pdf}{Roulette-wheel selection}}
@@ -243,7 +251,7 @@ but has been optimized for practical usage by reducing time and space complexiti
 
 The cross over process is trivially implemented.  Given two genomes $G_1, G_2$,
 a random integer $c = Rand \in [0, min(length(G_1), length(G_2))]$ is generated
-to be used as the cross over point.  Two new genomes are then given as:\\
+and used as the cross over point.  Two new genomes are then given as:\\
 
 $G'_1 = {G_1}_{[0,c)}{G_2}_{[c, length(G_2)]}$ and
 $G'_2 = {G_2}_{[0, c)}{G_1}_{[c, length(G_1)]}$ \\
@@ -255,19 +263,19 @@ $G'_2 = {G_2}_{[0, c)}{G_1}_{[c, length(G_1)]}$ \\
 \end{figure}
 
 This cross over is applied to each adjacent pair of prisoners in the current
-generation.  Since the order of the prisoners is random it follows that the pairings
+generation.  Since the order of the prisoners is random, it follows that the pairings
 are also random.
 
 \subsection{Mutation}
 \label{mutation}
 
-The mutation phase is straightforward as well.  Each gene of the genome is changed
+The mutation phase is also easy to follow.  Each gene of the genome is changed
 to a random decision $d = Rand \in [C, D]$ with a probability of $p$.  Generally
-this value of $p$ is low (between 1 and 5 percent) to avoid creating unstable
+this value of $p$ is low (between one and five percent) to avoid creating unstable
 evolution while still introducing some element of randomness.
 
 \pagebreak
-% stupid figure wont fit correctly without this page break
+% stupid figure wont fit correctly without this page break (lol)
 
 \subsection{Varying Population Size and Number of Generations}
 \label{vpg}
@@ -278,12 +286,12 @@ evolution while still introducing some element of randomness.
 \end{figure}
 
 While all other factors remain constant,
-varying population size has a greater effect on score than varying the number
+varying population size has a greater effect on the score when compared to varying the number
 of generations in the evolution. As seen in the graph above, increasing the number
 of generations has almost no effect on score while increasing the population
 size shows a clear upward trend.  It is likely this phenomenon occurs because the genome
 strings converge rather quickly.  Increasing population size diversifies
-the gene pool and gives a more optimal convergence point, whereas increasing
+the gene pool and gives a more optimal convergence point. Whereas, increasing
 the number of generations simply moves along the asymptote non-productively.
 
 \section{Hill Climbing}
@@ -304,12 +312,12 @@ The hill climbing algorithm has a structure equivalent to: \\
 
 \subsection {Successor Function}
 
-One of the main complications in deriving a successor for any given prisoner
-is that there is does not exist a natural relationship operator between two prisoners.
-As a consequence successors must be determined using random mutation.  Using
+One of the main complications encountered when deriving a successor for any given prisoner
+is that there does not exist a natural relationship operator between two prisoners.
+As a consequence, successors must be determined using random mutation.  Using
 random mutation to compute successors completely nullifies the locality aspect
-of hill climb search as it introduces a high probability of moving to an entirely different
-section of the search space.  This loss of locality eliminates the usefulness of
+of the hill climbimg search as it introduces a high probability of moving to an entirely different
+section in the search space.  This loss of locality eliminates the usefulness of
 methods, such as random restarts and horizontal shoulder movements, which attempt to
 escape plateaus and local maxima.
 
@@ -330,7 +338,7 @@ function of choice for hill climbing.
 \end{figure}
 
 As seen in the figure above there no is strong correlation between the number
-of iterations performed and average score of the prisoner produced.  In fact the results
+of iterations performed and average score of the prisoner produced.  In fact, the results
 are quite sporadic, with major performance decreases occurring throughout.  This is
 likely due to the non-local successor function as it implies there is no deterministic way
 to improve a solution.
@@ -340,7 +348,7 @@ to improve a solution.
 \section{Conclusion}
 
 \subsection{Traits of a Strong Genome}
-After extensive testing and experimentation it was discovered that the most successful prisoners
+After extensive testing and experimentation, it was discovered that the most successful prisoners
 had a bias towards cooperating with their opponent. Most notably, a large portion of
 the well performing prisoners choose to cooperate on the first move.
 It was observed that rather than immediately responding to the most recent moves, these prisoners would
@@ -351,18 +359,17 @@ the periods of cooperation were generally longer than those of defection.
 \subsection{Genetic Algorithm vs Hill Climbing}
 The genetic algorithm was able to consistently produce prisoners who performed
 optimally against other generated and predefined strategies. This was not the
-case however for the prisoners generated by hill climbing. Most prisoners
-that were created with this method struggled to outperform their opponents
+case however for the prisoners generated by hill climbing. Most prisoners created with this method struggled to outperform their opponents
 and were routinely bested in tournament play. \\
 
 The Iterated Prisoner's Dilemma is not a problem well suited for hill climbing.
-The lack of natural successor function for a given strategy makes it impossible
-to generate neighouring states which preserve locality.  Additionally, since
-a solution to the problem does not exist, there is no clear goal for the hill climb
+The lack of a natural successor function for a given strategy makes it impossible
+to generate neighouring states which preserve locality.  In addition, since
+a solution to the problem does not exist, there is no clear goal for the hill climbing algorithm
 to strive for. \\
 
 
-Prisoners resulting from genetic evloution completely dominated those resulting
+Prisoners resulting from genetic evolution wholly dominated those resulting
 from hill climbing.  The lowest scoring genetic prisoners were able to outscore
 the best of the hill climbers.  Genetically evolved prisoners learned the benefits
 of mutual cooperation, but also understood the danger of defection.
